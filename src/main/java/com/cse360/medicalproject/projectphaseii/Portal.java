@@ -2,6 +2,7 @@ package com.cse360.medicalproject.projectphaseii;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
@@ -13,7 +14,8 @@ import javafx.stage.Stage;
 public class Portal extends Application {
 
     public void start(Stage primaryStage) throws Exception {
-        // Creating buttons
+
+        // Creating sign in buttons
         Button newPatient = new Button("New Patient");
         Button existingPatient = new Button("Existing Patient");
         Button healthcareProvider = new Button("Healthcare Provider");
@@ -31,7 +33,7 @@ public class Portal extends Application {
 
         // Centering buttons within the VBox
         vbox.setFillWidth(true);
-        vbox.setAlignment(javafx.geometry.Pos.CENTER);
+        vbox.setAlignment(Pos.CENTER);
 
         // Creating "Sign In" title for text buttons box
         Text signInTitle = new Text("Sign In");
@@ -64,7 +66,7 @@ public class Portal extends Application {
         primaryStage.setMinWidth(400);
         primaryStage.setMinHeight(300);
 
-        // Setting the stage properties
+        // Setting the stage
         primaryStage.setScene(scene);
         primaryStage.setTitle("PediatricHealth");
         primaryStage.setResizable(false); // Page can not be resized
@@ -76,6 +78,7 @@ public class Portal extends Application {
         healthcareProvider.setOnAction(event -> healtcarePage());
     }
 
+    // Patient page
     private void patientPage() {
         Stage patientStage = new Stage();
         BorderPane borderPane = new BorderPane();
@@ -86,7 +89,7 @@ public class Portal extends Application {
         patientStage.setTitle("Patient");
         patientStage.show();
     }
-
+    // Healthcare Provider page
     private void healtcarePage() {
         Stage healthcareStage = new Stage();
         BorderPane borderPane = new BorderPane();
