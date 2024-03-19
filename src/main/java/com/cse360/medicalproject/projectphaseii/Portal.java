@@ -75,7 +75,7 @@ public class Portal extends Application {
         // Action when buttons are clicked
         newPatient.setOnAction(event -> patientPage());
         existingPatient.setOnAction(event -> patientPage());
-        healthcareProvider.setOnAction(event -> healtcarePage());
+        healthcareProvider.setOnAction(event -> healthcarePage());
     }
 
     // Patient page
@@ -90,7 +90,7 @@ public class Portal extends Application {
         patientStage.show();
     }
     // Healthcare Provider page
-    private void healtcarePage() {
+    private void healthcarePage() {
         Stage healthcareStage = new Stage();
         BorderPane borderPane = new BorderPane();
         Text text = new Text("This is the healthcare page");
