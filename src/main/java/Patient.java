@@ -4,6 +4,7 @@ public class Patient {
     private String patientID;
     private PatientRecord record;
     private Vector<Visit> visitHistory;
+    private MessageHistory messages;
 
     public Patient(String ID, PatientRecord rec, Visit intialVisit) {
         patientID = ID;
@@ -30,5 +31,9 @@ public class Patient {
 
     public String getPaitentID() {
         return patientID;
+    }
+
+    public MessageHistory getMessages() {
+        return messages;
     }
 }
