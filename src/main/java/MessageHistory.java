@@ -3,6 +3,10 @@ import java.util.Vector;
 public class MessageHistory {
     private Vector<Message> messages;
 
+    public MessageHistory() {
+        messages = new Vector<Message>();
+    }
+
     public void addMessage(Message message) {
         messages.add(message);
     }

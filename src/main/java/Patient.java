@@ -10,6 +10,7 @@ public class Patient {
         patientID = ID;
         record = rec;
         visitHistory.add(intialVisit);
+        messages = new MessageHistory();
     }
 
     public void addVisit(Visit visit) {

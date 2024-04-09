@@ -2,7 +2,6 @@ public class DoctorForm {
     private String summary;
     private String visitDate;
     private HealthcareProvider provider;
-    private MessageHistory messages;
 
     public DoctorForm(String summary, String visitDate, HealthcareProvider provider) {
         this.summary = summary;
@@ -22,7 +21,4 @@ public class DoctorForm {
         this.provider = provider;
     }
 
-    public MessageHistory getMessages() {
-        return messages;
-    }
 }
