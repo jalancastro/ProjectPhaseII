@@ -1,3 +1,4 @@
+package com.cse360.medicalproject.projectphaseii;
 public class MessagingSystem {
 
     public static void sendMessage(String senderID, String recipientID, String subject, String content, HealthcareSystem hSystem) {
@@ -5,7 +6,7 @@ public class MessagingSystem {
         Patient patient = hSystem.getPatientByID(recipientID);
         if (patient == null) {
             HealthcareProvider provider = hSystem.getProviderByID(recipientID);
-            provider.getMessages().add(newMessage);
+            provider.getMessages().addMessage(newMessage);
         }
         else {
             patient.getMessages().addMessage(newMessage);
@@ -18,7 +19,7 @@ public class MessagingSystem {
         Patient patient = hSystem.getPatientByID(recipientID);
         if (patient == null) {
             HealthcareProvider provider = hSystem.getProviderByID(recipientID);
-            provider.getMessages().add(newReply);
+            provider.getMessages().addMessage(newReply);
         }
         else {
             patient.getMessages().addMessage(newReply);

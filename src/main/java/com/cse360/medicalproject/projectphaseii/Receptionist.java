@@ -1,3 +1,4 @@
+package com.cse360.medicalproject.projectphaseii;
 public class Receptionist {
 
     //needs implementation
@@ -17,6 +18,6 @@ public class Receptionist {
     }
 
     public static HealthcareProvider createHealthcareProvider() {
-        
+        return null;
     }
 }

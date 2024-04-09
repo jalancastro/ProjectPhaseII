@@ -1,3 +1,4 @@
+package com.cse360.medicalproject.projectphaseii;
 public class DoctorForm {
     private String summary;
     private String visitDate;

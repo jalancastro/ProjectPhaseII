@@ -1,3 +1,4 @@
+package com.cse360.medicalproject.projectphaseii;
 public class PharmacyOrder {
     protected String medication;
     protected String pharmacyAddress;

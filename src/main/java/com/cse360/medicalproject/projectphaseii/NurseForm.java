@@ -1,3 +1,4 @@
+package com.cse360.medicalproject.projectphaseii;
 public class NurseForm {
     private String patientAllergies;
     private String patientHealthConcerns;

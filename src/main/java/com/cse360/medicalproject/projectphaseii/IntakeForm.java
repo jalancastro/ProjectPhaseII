@@ -1,3 +1,4 @@
+package com.cse360.medicalproject.projectphaseii;
 public class IntakeForm {
     private int weight;
     private String height;
