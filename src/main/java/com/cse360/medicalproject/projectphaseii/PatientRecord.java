@@ -1,3 +1,4 @@
+package com.cse360.medicalproject.projectphaseii;
 public class PatientRecord {
     private String firstName;
     private String lastName;

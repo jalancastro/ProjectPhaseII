@@ -1,16 +1,18 @@
+package com.cse360.medicalproject.projectphaseii;
 import java.util.Vector;
 
 public class HealthcareProvider {
     protected String providerID;
     protected String firstName;
     protected String lastName;
-    protected Vector<Message> messages;
+    protected MessageHistory messages;
 
 
     public HealthcareProvider(String ID, String fname, String lname) {
         providerID = ID;
         firstName = fname;
         lastName = lname;
+        messages = new MessageHistory();
     } 
 
     public void setFirstName(String firstName) {
@@ -19,10 +21,6 @@ public class HealthcareProvider {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public void setMessages(Vector<Message> messages) {
-        this.messages = messages;
     }
 
     public void setProviderID(String providerID) {
@@ -37,7 +35,7 @@ public class HealthcareProvider {
         return lastName;
     }
 
-    public Vector<Message> getMessages() {
+    public MessageHistory getMessages() {
         return messages;
     }
 

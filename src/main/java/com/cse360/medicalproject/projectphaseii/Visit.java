@@ -1,3 +1,4 @@
+package com.cse360.medicalproject.projectphaseii;
 public class Visit {
     private String visitDate;
     private HealthcareProvider visitProvider;

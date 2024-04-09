@@ -1,3 +1,4 @@
+package com.cse360.medicalproject.projectphaseii;
 public class Message {
     private String subject;
     private String recipientID;
