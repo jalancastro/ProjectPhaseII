@@ -4,14 +4,10 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.Separator;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -22,12 +18,12 @@ import javafx.stage.Stage;
 public class Portal extends Application {
 
     public void start(Stage primaryStage) throws Exception {
-    	
-    	// Title for the main scene
+
+        // Title for the main scene
         Text mainSceneTitle = new Text("Welcome to Pediatric Health");
-        mainSceneTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 30)); 
-    	
-    	// Creating "Sign In" title placed over the buttons
+        mainSceneTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
+
+        // Creating "Sign In" title placed over the buttons
         Text signInText = new Text("Sign In");
         signInText.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
         
@@ -55,8 +51,8 @@ public class Portal extends Application {
 
         // Creating VBox layout for buttons
         VBox signInButtonsBox = new VBox(50, // spacing between buttons
-        		             signInText, newPatientButton, existingPatientButton, 
-        		             healthcareProviderButton);
+                signInText, newPatientButton, existingPatientButton,
+                healthcareProviderButton);
 
         // Positioning sign in buttons
         signInButtonsBox.setAlignment(Pos.CENTER);
@@ -65,7 +61,7 @@ public class Portal extends Application {
         
         signInButtonsBox.setPadding(new Insets(25));
         signInButtonsBox.setStyle("-fx-border-color: black; -fx-border-width: 5px;"
-        		+                 " -fx-border-radius: 5px;");
+                +                 " -fx-border-radius: 5px;");
 
         VBox alignBox = new VBox(50, mainSceneTitle, signInButtonsBox);
         alignBox.setAlignment(Pos.CENTER);
@@ -98,7 +94,7 @@ public class Portal extends Application {
         
         // Placeholder Text
         Text patientPageText = new Text("This is the new patient page");
-        patientPageText.setFont(Font.font("Verdana", FontWeight.BOLD, 25)); 
+        patientPageText.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
         patientPageText.setX(300);
         patientPageText.setY(350);
         
@@ -111,11 +107,11 @@ public class Portal extends Application {
         
         // Handle Go Back Button
         goBackButton.setOnAction(event -> {
-        	try {
-				start(primaryStage);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+            try {
+                start(primaryStage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
         
         Group patientGroup = new Group(patientPageText, goBackButton);
@@ -127,34 +123,68 @@ public class Portal extends Application {
     private void patientPage(Stage primaryStage) {
         Stage patientStage = new Stage();
         patientStage.setTitle("Patient");
+
         
         // Same button style and font
         String buttonStyle = "-fx-background-color: #4473c5; -fx-text-fill: white;";
         Font buttonFont = Font.font("Verdana", FontWeight.NORMAL, 25);
         
-        // Placeholder Text
-        Text patientPageText = new Text("This is the existing patient page");
-        patientPageText.setFont(Font.font("Verdana", FontWeight.BOLD, 25)); 
-        patientPageText.setX(300);
-        patientPageText.setY(350);
-        
+        // Text
+        Text patientPageText = new Text("Patient Sign In");
+        Text instructions = new Text("Please enter your Patient ID");
+
+        // Text formatting and placement
+        patientPageText.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+        patientPageText.setX(100);
+        patientPageText.setY(100);
+        instructions.setFont(Font.font("Verdana", 20));
+        instructions.setFill(Color.GRAY);
+
+        // Patient ID Text Field
+        TextField patientIdField = new TextField("Patient ID");
+        patientIdField.setStyle("-fx-text-fill: gray");
+        patientIdField.setMaxWidth(300);
+        patientIdField.setMinHeight(50);
+
+        // Sign In button
+        Button signIn = new Button("Sign In");
+        signIn.setStyle(buttonStyle);
+        signIn.setPrefWidth(300);
+        signIn.setFont(buttonFont);
+
         // Go back button
         Button goBackButton = new Button("Go Back");
         goBackButton.setStyle(buttonStyle);
         goBackButton.setFont(buttonFont);
-        goBackButton.setLayoutX(800);
-        goBackButton.setLayoutY(600);
-        
+
+        VBox existingPatientBox = new VBox(50, patientPageText, instructions, patientIdField,
+                                            signIn, goBackButton);
+        existingPatientBox.setAlignment(Pos.CENTER);
+        existingPatientBox.setPrefWidth(600);
+        existingPatientBox.setPrefHeight(300);
+        existingPatientBox.setLayoutX(200);
+        existingPatientBox.setLayoutY(100);
+        existingPatientBox.setPadding(new Insets(25));
+        existingPatientBox.setStyle("-fx-border-color: black; -fx-border-width: 5px;"
+                                    + " -fx-border-radius: 5px;");
+
+
+        // Handle Sign In Button
+        /*signIn.setOnAction(event -> {
+          FIX ME
+        });
+        */
+
         // Handle Go Back Button
         goBackButton.setOnAction(event -> {
-        	try {
-				start(primaryStage);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+            try {
+                start(primaryStage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
         
-        Group patientGroup = new Group(patientPageText, goBackButton);
+        Group patientGroup = new Group(existingPatientBox);
         Scene patientScene = new Scene(patientGroup, 1000, 700);
         primaryStage.setScene(patientScene);
     }
@@ -183,11 +213,11 @@ public class Portal extends Application {
         
         // Handle Go Back Button
         goBackButton.setOnAction(event -> {
-        	try {
-				start(primaryStage);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+            try {
+                start(primaryStage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
         
         Group healthcareGroup = new Group(healthcarePageText, goBackButton);
