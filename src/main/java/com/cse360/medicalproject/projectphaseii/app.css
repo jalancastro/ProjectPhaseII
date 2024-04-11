@@ -1,0 +1,38 @@
+.main-btn{
+	-fx-background-color: #6495ed; /* cornflower blue */
+	-fx-pref-width: 200px;
+	-fx-pref-height: 100px;
+	-fx-padding: 20px;
+	/*-fx-border-radius:0px;*/
+	-fx-border-color: darkblue;
+	-fx-text-fill: black;
+	-fx-font-weight: bold;
+	-fx-font-family: serif, Times;
+}
+
+.pref-text-style{
+	-fx-font-size: 14px;
+	-fx-font-family: serif, Times;
+}
+
+.form-btns{
+	-fx-background-color: #4473c5; /* some blue */
+	-fx-pref-width: 200px;
+	-fx-padding: 10px;
+	/*-fx-border-radius:0px;*/
+	-fx-border-color: black;
+	-fx-text-fill: white;
+	-fx-font-weight: normal;
+	-fx-font-family: sans-serif, Verdana;
+}
+
+.new-patient-fields{
+	-fx-border-color: black;
+	-fx-pref-height: 5px;
+}
+
+.patient-form-text{
+	-fx-font-family: sans-serif, Verdana;
+	-fx-font-weight: normal;
+	-fx-font-size: 14px;
+}
