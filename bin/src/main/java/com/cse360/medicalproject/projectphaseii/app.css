@@ -1,0 +1,21 @@
+.form-btns{
+	-fx-background-color: #4473c5; /* some blue */
+	-fx-pref-width: 200px;
+	-fx-padding: 10px;
+	/*-fx-border-radius:0px;*/
+	-fx-border-color: black;
+	-fx-text-fill: white;
+	-fx-font-weight: normal;
+	-fx-font-family: sans-serif, Verdana;
+}
+
+.new-patient-fields{
+	-fx-border-color: black;
+	-fx-pref-height: 5px;
+}
+
+.patient-form-text{
+	-fx-font-family: sans-serif, Verdana;
+	-fx-font-weight: normal;
+	-fx-font-size: 14px;
+}
