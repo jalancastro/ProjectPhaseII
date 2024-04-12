@@ -174,6 +174,10 @@ public class DataAccessObject {
 	            // Handle error: show an alert or log the error
 	        }
 	    }
+
+	protected String getDataFolderPath() {
+		return dataFolderPath;
+	}
 	 
 	 
 

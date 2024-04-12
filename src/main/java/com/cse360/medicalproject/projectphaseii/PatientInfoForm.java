@@ -10,19 +10,22 @@ public class PatientInfoForm {
     private String email;
     private String phoneNumber;
 
-    public PatientInfoForm(String fname, String lname, String dob, String address, String city, String state, String zipcode, String email, String phoneNumber) {
-        firstName = fname;
-        lastName = lname;
-        this.dob = dob;
-        this.address = address;
-        this.city = city;
-        this.state = state;
-        this.zipcode = zipcode;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-    }
 
-    public String getAddress() {
+    public PatientInfoForm(String firstName, String lastName, String month, String day, String year, String address,
+			String city, String state, String zipcode, String email, String phoneNumber) {
+    	
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.dob = month + "/" + day + "/" + year;	// mm/dd/yyyy
+		this.address = address;
+		this.city = city;
+		this.state = state;
+		this.zipcode = zipcode;
+		this.email = email;
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getAddress() {
         return address;
     }
 
@@ -34,7 +37,11 @@ public class PatientInfoForm {
         return dob;
     }
 
-    public String getEmail() {
+    public void setDob(String dob) {
+		this.dob = dob;
+	}
+
+	public String getEmail() {
         return email;
     }
 
@@ -66,11 +73,7 @@ public class PatientInfoForm {
         this.city = city;
     }
 
-    public void setDob(String dob) {
-        this.dob = dob;
-    }
-
-    public void setEmail(String email) {
+	public void setEmail(String email) {
         this.email = email;
     }
 
@@ -92,6 +95,12 @@ public class PatientInfoForm {
 
     public void setZipcode(String zipcode) {
         this.zipcode = zipcode;
+    }
+    
+    public String toString() {
+		return firstName + "," + lastName + ","  + dob + ","
+				+ address + "," + city + "," + state + ","
+				+ zipcode + "," + email + "," + phoneNumber;
     }
     
 }
