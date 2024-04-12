@@ -31,6 +31,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,14 +40,14 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class Portal extends Application {
-	
-	 private DataAccessObject dao;
 
-	    @Override
-	    public void init() {
-	        // Initialize the data access object with the relative path to the data directory
-	        dao = new DataAccessObject("data");
-	    }
+    private DataAccessObject dao;
+
+    @Override
+    public void init() {
+        // Initialize the data access object with the relative path to the data directory
+        dao = new DataAccessObject("data");
+    }
 
     public void start(Stage primaryStage) throws Exception {
 
@@ -134,8 +135,8 @@ public class Portal extends Application {
         Label patFormLbl = new Label("New Patient Form");
         patFormLbl.getStyleClass().add("patient-form-text");
         patFormLbl.setStyle("-fx-underline: true; -fx-font-size: 18px;" +
-        					"-fx-font-weight: bold;"
-        					);
+                "-fx-font-weight: bold;"
+        );
         // Label above name fields
         Label nameLbl = new Label("Name");
         nameLbl.getStyleClass().add("patient-form-text");
@@ -162,61 +163,60 @@ public class Portal extends Application {
         lastNameField.setPromptText("Last Name");
         
         // Date of birth fields
-		var monthField = new ValidatingTextField(userInput->
-			(userInput.matches(("(^[1-9]$)|(^1[0-2]$)")))); 	// (m) 1-12
-		monthField.setPromptText("Month");
-		
-		var dayField = new ValidatingTextField(userInput->
-			(userInput.matches(("[1-9]|[12]\\d|3[01]$")))); 	// (d) 1-31 
-		dayField.setPromptText("Day");
-		
-		var yearField = new ValidatingTextField(userInput->
-			(userInput.matches(("^\\d{4}$"))));					// (yyyy)
-		yearField.setPromptText("Year");
-		
-		// Address fields
-		var addressField = new ValidatingTextField(userInput->true); // any string
-		addressField.setPromptText("Street Address");
-		
-		var cityField = new ValidatingTextField(userInput->true); // any string
-		cityField.setPromptText("City");
-		
-		var stateField = new ValidatingTextField(userInput->true); // any string
-		stateField.setPromptText("State");
-		
-		var zipField = new ValidatingTextField(userInput->
-				(userInput.matches("^\\d{3,10}")));			//3-10-digit integer
-		zipField.setPromptText("Zip/Postal Code");
-		
-		// Initializing regex strings
-		// Email regex format: {anything}@{anything}.{any 2-4 length word}
-		String emailFormat = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
-		// Phone regex format: xxx-xxx-xxxx, x-xxx-xxx-xxxx, with () variations
-		String phoneFormat = "^\\s*(?:\\+?(\\d{1,3}))?"
-				+ "[-. (]*(\\d{3})[-. )]*(\\d{3})[-. ]*"
-				+ "(\\d{4})(?: *x(\\d+))?\\s*$"
-				;
-		
-		// Contact fields
-		var emailField = new ValidatingTextField(userInput->
-				(userInput.matches(emailFormat)));
-		emailField.setPromptText("Email Address");
-		
-		var phoneField = new ValidatingTextField(userInput->
-				(userInput.matches(phoneFormat)));
-		phoneField.setPromptText("Phone Number");
-		
-		
-		// Style the fields
-		Stream.of(firstNameField,lastNameField, monthField, stateField,
-				dayField, yearField, addressField, cityField, zipField,
-				emailField, phoneField
-				)
-				.forEach(TextArea->
-					TextArea.getStyleClass().add("new-patient-fields")
-				);
-		// -----------------------------------------------------------------
-		
+        var monthField = new ValidatingTextField(userInput->
+                (userInput.matches(("(^[1-9]$)|(^1[0-2]$)"))));     // (m) 1-12
+        monthField.setPromptText("Month");
+
+        var dayField = new ValidatingTextField(userInput->
+                (userInput.matches(("[1-9]|[12]\\d|3[01]$"))));     // (d) 1-31
+        dayField.setPromptText("Day");
+
+        var yearField = new ValidatingTextField(userInput->
+                (userInput.matches(("^\\d{4}$"))));                    // (yyyy)
+        yearField.setPromptText("Year");
+
+        // Address fields
+        var addressField = new ValidatingTextField(userInput->true); // any string
+        addressField.setPromptText("Street Address");
+
+        var cityField = new ValidatingTextField(userInput->true); // any string
+        cityField.setPromptText("City");
+
+        var stateField = new ValidatingTextField(userInput->true); // any string
+        stateField.setPromptText("State");
+
+        var zipField = new ValidatingTextField(userInput->
+                (userInput.matches("^\\d{3,10}")));            //3-10-digit integer
+        zipField.setPromptText("Zip/Postal Code");
+
+        // Initializing regex strings
+        // Email regex format: {anything}@{anything}.{any 2-4 length word}
+        String emailFormat = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+        // Phone regex format: xxx-xxx-xxxx, x-xxx-xxx-xxxx, with () variations
+        String phoneFormat = "^\\s*(?:\\+?(\\d{1,3}))?"
+                + "[-. (]*(\\d{3})[-. )]*(\\d{3})[-. ]*"
+                + "(\\d{4})(?: *x(\\d+))?\\s*$";
+
+        // Contact fields
+        var emailField = new ValidatingTextField(userInput->
+                (userInput.matches(emailFormat)));
+        emailField.setPromptText("Email Address");
+
+        var phoneField = new ValidatingTextField(userInput->
+                (userInput.matches(phoneFormat)));
+        phoneField.setPromptText("Phone Number");
+
+
+        // Style the fields
+        Stream.of(firstNameField,lastNameField, monthField, stateField,
+                        dayField, yearField, addressField, cityField, zipField,
+                        emailField, phoneField
+                )
+                .forEach(TextArea->
+                        TextArea.getStyleClass().add("new-patient-fields")
+                );
+        // -----------------------------------------------------------------
+
         // --------------- Buttons -----------------
         // Same button style and font
         String buttonStyle = "-fx-background-color: #4473c5; -fx-text-fill: white;";
@@ -239,101 +239,101 @@ public class Portal extends Application {
         // Submit Button
         Button submitButton = new Button("Submit");
         String submitBtnStyle = "-fx-background-color: #4473c5; -fx-text-fill: white;" +
-        		"-fx-pref-width: 200px;";
+                "-fx-pref-width: 200px;";
         submitButton.setStyle(submitBtnStyle);
         submitButton.setFont(buttonFont);
  
         // The save button will be enabled after all valid input is received by the user
         submitButton.disableProperty().bind(
-				((firstNameField.isValidInput.and
-						(lastNameField.isValidInput).and
-						(monthField.isValidInput).and
-						(dayField.isValidInput).and
-						(yearField.isValidInput).and
-						(addressField.isValidInput).and
-						(cityField.isValidInput).and
-						(stateField.isValidInput).and
-						(zipField.isValidInput).and
-						(emailField.isValidInput).and
-						(phoneField.isValidInput)
-					).not()));
+                ((firstNameField.isValidInput.and
+                        (lastNameField.isValidInput).and
+                        (monthField.isValidInput).and
+                        (dayField.isValidInput).and
+                        (yearField.isValidInput).and
+                        (addressField.isValidInput).and
+                        (cityField.isValidInput).and
+                        (stateField.isValidInput).and
+                        (zipField.isValidInput).and
+                        (emailField.isValidInput).and
+                        (phoneField.isValidInput)
+                ).not()));
         // On user click submit button
         submitButton.setOnAction(event->{
-        	// Initialize new form received from the fields after user input
-			PatientInfoForm form = new PatientInfoForm(
-					firstNameField.getText(), lastNameField.getText(),
-					monthField.getText(), dayField.getText(), yearField.getText(),
-					addressField.getText(), cityField.getText(), stateField.getText(),
-					zipField.getText(), emailField.getText(), phoneField.getText()
-					);
-			
-			// Store new patient information file
-			Receptionist frontDesk = new Receptionist(dao, form);
-			frontDesk.createPatientFile();
-			
-			
-			// Switch stage to show generated ID to the user
-			GridPane idLayout = new GridPane();
-			idLayout.setPadding(new Insets (10));
-	        // Horizontal gap between fields
-	        idLayout.setHgap(5);
-	        // Vertical gap between fields
-	        idLayout.setVgap(20);
-	        
-	        Scene idScene = new Scene(idLayout, 300, 300);
-	        idScene.getStylesheets().add(getClass().getResource("app.css").toExternalForm());
-	        Label stageLabel = new Label("Your Unique Patient ID");
-	        stageLabel.getStyleClass().add("patient-form-text");
-	        
-	        Label saveIdLbl = new Label("Save this ID for future use");
-	        saveIdLbl.getStyleClass().add("patient-form-text");
-	        
-	        var idField = new TextArea();
-	        idField.appendText(frontDesk.getCurrPatientID());
-	        idField.getStyleClass().add("new-patient-fields");
-	        idField.setStyle("-fx-focus-color: transparent;");
-	        idField.setEditable(false);
-	        
-	        // Buttons
-	        Button closeBtn = new Button("Close");
-	        String closeBtnStyle = "-fx-background-color: #4473c5; -fx-text-fill: white;" +
-	        		"-fx-pref-width: 150px;";
-	        closeBtn.setStyle(closeBtnStyle);
-	        closeBtn.setFont(buttonFont);
-	        
-	        closeBtn.setOnAction(e->{
-	        	try {
-					start(primaryStage);
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-	        });	        
-	        // Column 0
-	        GridPane.setConstraints(stageLabel, 0, 0, 3, 1, null, null, null, null, null);
-	        idLayout.getChildren().add(stageLabel);
-	        // Column 1
-	        GridPane.setConstraints(saveIdLbl, 0, 1, 3, 1, null, null, null, null, null);
-	        idLayout.getChildren().add(saveIdLbl);
-	        // Column 2
-	        GridPane.setConstraints(idField, 0, 2, 3, 1, null, null, null, null, null);
-	        idLayout.getChildren().add(idField);
-	        // Column 3
-	        GridPane.setConstraints(closeBtn, 0, 3, 3, 1, HPos.RIGHT, null, null, null, null);
-	        idLayout.getChildren().add(closeBtn);
-	        
-	        primaryStage.setScene(idScene);
+            // Initialize new form received from the fields after user input
+            PatientInfoForm form = new PatientInfoForm(
+                    firstNameField.getText(), lastNameField.getText(),
+                    monthField.getText(), dayField.getText(), yearField.getText(),
+                    addressField.getText(), cityField.getText(), stateField.getText(),
+                    zipField.getText(), emailField.getText(), phoneField.getText()
+            );
+
+            // Store new patient information file
+            Receptionist frontDesk = new Receptionist(dao, form);
+            frontDesk.createPatientFile();
+
+
+            // Switch stage to show generated ID to the user
+            GridPane idLayout = new GridPane();
+            idLayout.setPadding(new Insets (10));
+            // Horizontal gap between fields
+            idLayout.setHgap(5);
+            // Vertical gap between fields
+            idLayout.setVgap(20);
+
+            Scene idScene = new Scene(idLayout, 300, 300);
+            idScene.getStylesheets().add(getClass().getResource("app.css").toExternalForm());
+            Label stageLabel = new Label("Your Unique Patient ID");
+            stageLabel.getStyleClass().add("patient-form-text");
+
+            Label saveIdLbl = new Label("Save this ID for future use");
+            saveIdLbl.getStyleClass().add("patient-form-text");
+
+            var idField = new TextArea();
+            idField.appendText(frontDesk.getCurrPatientID());
+            idField.getStyleClass().add("new-patient-fields");
+            idField.setStyle("-fx-focus-color: transparent;");
+            idField.setEditable(false);
+
+            // Buttons
+            Button closeBtn = new Button("Close");
+            String closeBtnStyle = "-fx-background-color: #4473c5; -fx-text-fill: white;" +
+                    "-fx-pref-width: 150px;";
+            closeBtn.setStyle(closeBtnStyle);
+            closeBtn.setFont(buttonFont);
+
+            closeBtn.setOnAction(e->{
+                try {
+                    start(primaryStage);
+                } catch (Exception e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            });
+            // Column 0
+            GridPane.setConstraints(stageLabel, 0, 0, 3, 1, null, null, null, null, null);
+            idLayout.getChildren().add(stageLabel);
+            // Column 1
+            GridPane.setConstraints(saveIdLbl, 0, 1, 3, 1, null, null, null, null, null);
+            idLayout.getChildren().add(saveIdLbl);
+            // Column 2
+            GridPane.setConstraints(idField, 0, 2, 3, 1, null, null, null, null, null);
+            idLayout.getChildren().add(idField);
+            // Column 3
+            GridPane.setConstraints(closeBtn, 0, 3, 3, 1, HPos.RIGHT, null, null, null, null);
+            idLayout.getChildren().add(closeBtn);
+
+            primaryStage.setScene(idScene);
         });
         // ----------------------------------------------------------------------------
-		// Adding components to the Gridpane now
+        // Adding components to the Gridpane now
         // Column 0
-		GridPane.setConstraints(patFormLbl, 0, 0, 2, 1, null, null, Priority.ALWAYS, null, null);
-		formLayout.getChildren().add(patFormLbl);
-		
-		// Column 1
-		formLayout.add(nameLbl, 0, 1);
-		
-		// Column 2
+        GridPane.setConstraints(patFormLbl, 0, 0, 2, 1, null, null, Priority.ALWAYS, null, null);
+        formLayout.getChildren().add(patFormLbl);
+
+        // Column 1
+        formLayout.add(nameLbl, 0, 1);
+
+        // Column 2
         formLayout.add(firstNameField, 0, 2);
         formLayout.add(lastNameField, 1, 2);
         
@@ -427,10 +427,10 @@ public class Portal extends Application {
 
 
         // Handle Sign In Button
-        /*signIn.setOnAction(event -> {
-          FIX ME
+        signIn.setOnAction(event -> {
+          handlePatientLogin(patientIdField.getText(), primaryStage);
         });
-        */
+
 
         // Handle Go Back Button
         goBackButton.setOnAction(event -> {
@@ -444,6 +444,33 @@ public class Portal extends Application {
         Group patientGroup = new Group(existingPatientBox);
         Scene patientScene = new Scene(patientGroup, 1000, 700);
         primaryStage.setScene(patientScene);
+    }
+
+    // Method to handle patient login
+    private void handlePatientLogin(String patientId, Stage primaryStage) {
+        // Check if the ID is 6 digits
+        if (!patientId.matches("\\d{8}")) {
+            showAlert(Alert.AlertType.ERROR, primaryStage, "Login Error", "Invalid ID: Please enter an 8-digit Patient ID.");
+            return;
+        }
+
+        // Read the Patient's ID from a file title and verify
+        try {
+            Path path = Paths.get("data/" + patientId + ".txt");
+            File patientFile = path.toFile();
+
+            System.out.println("Absolute Path: " + path.toAbsolutePath());
+
+            if (patientFile.exists()) {
+                System.out.println("Exists");
+            } else {
+                // Show error if the ID is not found
+                showAlert(Alert.AlertType.ERROR, primaryStage, "Login Error", "Invalid Patient ID: Please try again.");
+                System.out.println("Does not exist");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
     
     private void healthcarePage(Stage primaryStage) {
@@ -502,7 +529,7 @@ public class Portal extends Application {
 
     
     private void nurseLoginPage(Stage primaryStage) {
-    	 // Title text
+        // Title text
         Text nursePageText = new Text("Nurse Sign In");
         nursePageText.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
 
@@ -557,11 +584,11 @@ public class Portal extends Application {
     
     
     private Object handleNurseLogin(String text, Stage primaryStage) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	private void doctorLoginPage(Stage primaryStage) {
+    private void doctorLoginPage(Stage primaryStage) {
         // Title text
         Text doctorPageText = new Text("Doctor Sign In");
         doctorPageText.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
@@ -617,21 +644,27 @@ public class Portal extends Application {
     
     // Method to handle doctor login
     private void handleDoctorLogin(String id, Stage primaryStage) {
-        // Check if the ID is 8 digits
-        if (!id.matches("\\d{8}")) {
-            showAlert(Alert.AlertType.ERROR, primaryStage, "Login Error", "Invalid ID: Please enter a 8-digit ID.");
+        // Check if the ID is 6 digits
+        if (!id.matches("\\d{6}")) {
+            showAlert(Alert.AlertType.ERROR, primaryStage, "Login Error", "Invalid ID: Please enter a 6-digit ID.");
             return;
         }
         
-        if (dao.isDoctorIdValid(id)) {
-        	Doctor doctorPage = new Doctor(id, dao.getDoctorNameById(id));
-            doctorPage.start(primaryStage);
+        // Read the doctor IDs from a file and verify
+        try {
+            Path path = Paths.get("doctors.txt");
+            boolean isValid = Files.lines(path).anyMatch(line -> line.equals(id));
 
-        	
-
-        } else {
-            // Show error if the ID is not found
-            showAlert(Alert.AlertType.ERROR, primaryStage, "Login Error", "Invalid ID: ID not found.");
+            if (isValid) {
+                // If the ID is valid, proceed to the doctor page (to be implemented)
+                goToDoctorPage(primaryStage);
+            } else {
+                // Show error if the ID is not found
+                showAlert(Alert.AlertType.ERROR, primaryStage, "Login Error", "Invalid ID: ID not found.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, primaryStage, "Login Error", "An error occurred while verifying ID.");
         }
     }
 
@@ -644,6 +677,15 @@ public class Portal extends Application {
         alert.initOwner(owner);
         alert.show();
     }
+
+
+    
+    
+ // Placeholder method to go to the doctor page
+    private void goToDoctorPage(Stage primaryStage) {
+        // TODO: Implement transition to the doctor's page
+    }
+  
     
    
 
