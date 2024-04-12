@@ -240,9 +240,12 @@ public class Portal extends Application {
         
         // Submit Button
         Button submitButton = new Button("Submit");
-        submitButton.getStyleClass().add("form-btns");
+        String submitBtnStyle = "-fx-background-color: #4473c5; -fx-text-fill: white;" +
+        		"-fx-pref-width: 200px;";
+        submitButton.setStyle(submitBtnStyle);
+        submitButton.setFont(buttonFont);
  
-        // The save button will be enabled after all valid input is input by the user
+        // The save button will be enabled after all valid input is received by the user
         submitButton.disableProperty().bind(
 				((firstNameField.isValidInput.and
 						(lastNameField.isValidInput).and
@@ -258,20 +261,18 @@ public class Portal extends Application {
 					).not()));
         // On user click submit button
         submitButton.setOnAction(event->{
-        	// Data received from the fields after user input
-        	String inputFirstName = firstNameField.getText();
-			String inputLastName = lastNameField.getText();
-			int inputMonth = Integer.valueOf(monthField.getText());
-			int inputDay = Integer.valueOf(dayField.getText());
-			int inputYear = Integer.valueOf(yearField.getText());
-			String inputAddress = addressField.getText();
-			String inputCity = cityField.getText();
-			String inputState = stateField.getText();
-			int inputZip = Integer.valueOf(zipField.getText());
-			String inputEmail = emailField.getText();
-			String inputPhone = phoneField.getText();
+        	// Initialize new form received from the fields after user input
+			PatientInfoForm form = new PatientInfoForm(
+					firstNameField.getText(), lastNameField.getText(),
+					monthField.getText(), dayField.getText(), yearField.getText(),
+					addressField.getText(), cityField.getText(), stateField.getText(),
+					zipField.getText(), emailField.getText(), phoneField.getText()
+					);
 			
-			// Implementation to generate ID 
+			// Store new patient information file
+			Receptionist frontDesk = new Receptionist(dao, form);
+			frontDesk.createPatientFile();
+			
 			
 			// Switch stage to show generated ID to the user
 			GridPane idLayout = new GridPane();
@@ -290,15 +291,17 @@ public class Portal extends Application {
 	        saveIdLbl.getStyleClass().add("patient-form-text");
 	        
 	        var idField = new TextArea();
-	        idField.appendText("PlaceHolder for ID to display");
+	        idField.appendText(frontDesk.getCurrPatientID());
 	        idField.getStyleClass().add("new-patient-fields");
 	        idField.setStyle("-fx-focus-color: transparent;");
 	        idField.setEditable(false);
 	        
 	        // Buttons
 	        Button closeBtn = new Button("Close");
-	        closeBtn.getStyleClass().add("form-btns");
-	        closeBtn.setStyle("-fx-pref-width: 100;");
+	        String closeBtnStyle = "-fx-background-color: #4473c5; -fx-text-fill: white;" +
+	        		"-fx-pref-width: 150px;";
+	        closeBtn.setStyle(closeBtnStyle);
+	        closeBtn.setFont(buttonFont);
 	        
 	        closeBtn.setOnAction(e->{
 	        	try {
@@ -367,6 +370,9 @@ public class Portal extends Application {
         // Column 10
         GridPane.setConstraints(submitButton, 0, 10, 3, 1, HPos.CENTER, VPos.CENTER, null, null, null);
         formLayout.getChildren().add(submitButton);
+        // Column 11
+        GridPane.setConstraints(goBackButton, 0, 11, 3, 1, HPos.CENTER, VPos.CENTER, null, null, null);
+        formLayout.getChildren().add(goBackButton);
         
         //Scene patientScene = new Scene(patientGroup, 1000, 700);
         primaryStage.setScene(patientScene);

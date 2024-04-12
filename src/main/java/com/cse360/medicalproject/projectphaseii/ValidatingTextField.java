@@ -4,7 +4,6 @@ import javafx.scene.control.TextField;
 import java.util.function.Predicate;
 import javafx.beans.property.SimpleBooleanProperty;
 
-
 public class ValidatingTextField extends TextField{
 	// data
 	private final Predicate<String> validating;
