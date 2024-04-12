@@ -20,6 +20,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -30,10 +31,22 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class Portal extends Application {
+	
+	 private DataAccessObject dao;
+
+	    @Override
+	    public void init() {
+	        // Initialize the data access object with the relative path to the data directory
+	        dao = new DataAccessObject("data");
+	    }
 
     public void start(Stage primaryStage) throws Exception {
 
@@ -359,7 +372,7 @@ public class Portal extends Application {
         primaryStage.setScene(patientScene);
     }
 
-    // Existing patient page
+ // Existing patient page
     private void patientPage(Stage primaryStage) {
         Stage patientStage = new Stage();
         patientStage.setTitle("Patient");
@@ -429,29 +442,35 @@ public class Portal extends Application {
         primaryStage.setScene(patientScene);
     }
     
-    // Healthcare Provider page
     private void healthcarePage(Stage primaryStage) {
-        Stage healthcareStage = new Stage();
-        healthcareStage.setTitle("Healthcare Provider");
-        
-        // Same button style and font
+        // Title for the Healthcare Provider login scene
+        Text healthcareSceneTitle = new Text("Healthcare Provider Login");
+        healthcareSceneTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
+
+        // Style for the buttons
         String buttonStyle = "-fx-background-color: #4473c5; -fx-text-fill: white;";
         Font buttonFont = Font.font("Verdana", FontWeight.NORMAL, 25);
-        
-        // Placeholder Text
-        Text healthcarePageText = new Text("This is the healthcare provider page");
-        healthcarePageText.setFont(Font.font("Verdana", FontWeight.BOLD, 25)); 
-        healthcarePageText.setX(250);
-        healthcarePageText.setY(350);
-        
-        // Go back button
+
+        // Creating login buttons for each healthcare provider role
+        Button nurseButton = new Button("Nurse");
+        nurseButton.setStyle(buttonStyle);
+        nurseButton.setFont(buttonFont);
+        nurseButton.setPrefSize(325, 75);
+        nurseButton.setOnAction(event -> nurseLoginPage(primaryStage));
+
+        Button doctorButton = new Button("Doctor");
+        doctorButton.setStyle(buttonStyle);
+        doctorButton.setFont(buttonFont);
+        doctorButton.setPrefSize(325, 75);
+        doctorButton.setOnAction(event -> doctorLoginPage(primaryStage));
+
+    
+
+        // Go back button to return to the main scene
         Button goBackButton = new Button("Go Back");
         goBackButton.setStyle(buttonStyle);
         goBackButton.setFont(buttonFont);
-        goBackButton.setLayoutX(800);
-        goBackButton.setLayoutY(600);
-        
-        // Handle Go Back Button
+        goBackButton.setPrefSize(325, 75);
         goBackButton.setOnAction(event -> {
             try {
                 start(primaryStage);
@@ -459,12 +478,185 @@ public class Portal extends Application {
                 e.printStackTrace();
             }
         });
-        
-        Group healthcareGroup = new Group(healthcarePageText, goBackButton);
-        Scene healthcareScene = new Scene(healthcareGroup, 1000, 700);
+
+        // Layout for the healthcare provider buttons
+        VBox healthcareButtonsBox = new VBox(20, // spacing between buttons
+                healthcareSceneTitle, nurseButton, doctorButton, goBackButton);
+        healthcareButtonsBox.setAlignment(Pos.CENTER);
+
+        // Setting padding and border for the VBox
+        healthcareButtonsBox.setPadding(new Insets(25));
+        healthcareButtonsBox.setStyle("-fx-border-color: black; -fx-border-width: 5px;"
+                + "-fx-border-radius: 5px; -fx-background-color: white;");
+
+        // Creating and setting the scene
+        Scene healthcareScene = new Scene(healthcareButtonsBox, 1000, 700);
         primaryStage.setScene(healthcareScene);
+        primaryStage.setTitle("Healthcare Provider Login");
+        primaryStage.show();
     }
 
+    
+    private void nurseLoginPage(Stage primaryStage) {
+    	 // Title text
+        Text nursePageText = new Text("Nurse Sign In");
+        nursePageText.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+
+        // Instructions text
+        Text instructions = new Text("Please enter your Nurse ID");
+        instructions.setFont(Font.font("Verdana", 20));
+        instructions.setFill(Color.GRAY);
+
+        // Doctor ID Text Field
+        TextField nurseIDField = new TextField();
+        nurseIDField.setPromptText("Nurse ID");
+        nurseIDField.setStyle("-fx-text-fill: black; -fx-pref-width: 300; -fx-pref-height: 50; -fx-font-size: 20;");
+
+        // Sign In button
+        Button signInButton = new Button("Sign In");
+        String buttonStyle = "-fx-background-color: #4473c5; -fx-text-fill: white; -fx-font-size: 20;";
+        signInButton.setStyle(buttonStyle);
+        signInButton.setPrefWidth(300);
+        signInButton.setFont(Font.font("Verdana", FontWeight.NORMAL, 20));
+        signInButton.setOnAction(event -> handleNurseLogin(nurseIDField.getText(), primaryStage));
+
+        // Go back button
+        Button goBackButton = new Button("Go Back");
+        goBackButton.setStyle(buttonStyle);
+        goBackButton.setFont(Font.font("Verdana", FontWeight.NORMAL, 20));
+        goBackButton.setPrefWidth(300);
+        goBackButton.setOnAction(event -> {
+            try {
+                start(primaryStage); 
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        // VBox layout for the sign-in components
+        VBox signInBox = new VBox(20, nursePageText, instructions, nurseIDField, signInButton, goBackButton);
+        signInBox.setAlignment(Pos.CENTER);
+        signInBox.setPadding(new Insets(40));
+        signInBox.setStyle("-fx-background-color: white; -fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5;");
+
+        // Center the VBox in the scene
+        StackPane root = new StackPane(signInBox);
+        root.setStyle("-fx-background-color: #f0f0f0;");
+
+        // Create the scene with the StackPane as the root
+        Scene scene = new Scene(root, 1000, 700);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Doctor Sign In");
+        primaryStage.show();
+    }    
+    
+    
+    
+    private Object handleNurseLogin(String text, Stage primaryStage) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private void doctorLoginPage(Stage primaryStage) {
+        // Title text
+        Text doctorPageText = new Text("Doctor Sign In");
+        doctorPageText.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+
+        // Instructions text
+        Text instructions = new Text("Please enter your Doctor ID");
+        instructions.setFont(Font.font("Verdana", 20));
+        instructions.setFill(Color.GRAY);
+
+        // Doctor ID Text Field
+        TextField doctorIdField = new TextField();
+        doctorIdField.setPromptText("Doctor ID");
+        doctorIdField.setStyle("-fx-text-fill: black; -fx-pref-width: 300; -fx-pref-height: 50; -fx-font-size: 20;");
+
+        // Sign In button
+        Button signInButton = new Button("Sign In");
+        String buttonStyle = "-fx-background-color: #4473c5; -fx-text-fill: white; -fx-font-size: 20;";
+        signInButton.setStyle(buttonStyle);
+        signInButton.setPrefWidth(300);
+        signInButton.setFont(Font.font("Verdana", FontWeight.NORMAL, 20));
+        signInButton.setOnAction(event -> handleDoctorLogin(doctorIdField.getText(), primaryStage));
+
+        // Go back button
+        Button goBackButton = new Button("Go Back");
+        goBackButton.setStyle(buttonStyle);
+        goBackButton.setFont(Font.font("Verdana", FontWeight.NORMAL, 20));
+        goBackButton.setPrefWidth(300);
+        goBackButton.setOnAction(event -> {
+            try {
+                start(primaryStage); 
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        // VBox layout for the sign-in components
+        VBox signInBox = new VBox(20, doctorPageText, instructions, doctorIdField, signInButton, goBackButton);
+        signInBox.setAlignment(Pos.CENTER);
+        signInBox.setPadding(new Insets(40));
+        signInBox.setStyle("-fx-background-color: white; -fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5;");
+
+        // Center the VBox in the scene
+        StackPane root = new StackPane(signInBox);
+        root.setStyle("-fx-background-color: #f0f0f0;");
+
+        // Create the scene with the StackPane as the root
+        Scene scene = new Scene(root, 1000, 700);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Doctor Sign In");
+        primaryStage.show();
+    }
+
+    
+    // Method to handle doctor login
+    private void handleDoctorLogin(String id, Stage primaryStage) {
+        // Check if the ID is 6 digits
+        if (!id.matches("\\d{6}")) {
+            showAlert(Alert.AlertType.ERROR, primaryStage, "Login Error", "Invalid ID: Please enter a 6-digit ID.");
+            return;
+        }
+        
+        // Read the doctor IDs from a file and verify
+        try {
+            Path path = Paths.get("doctors.txt");
+            boolean isValid = Files.lines(path).anyMatch(line -> line.equals(id));
+
+            if (isValid) {
+                // If the ID is valid, proceed to the doctor page (to be implemented)
+                goToDoctorPage(primaryStage);
+            } else {
+                // Show error if the ID is not found
+                showAlert(Alert.AlertType.ERROR, primaryStage, "Login Error", "Invalid ID: ID not found.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, primaryStage, "Login Error", "An error occurred while verifying ID.");
+        }
+    }
+
+    // Method to show alerts
+    private void showAlert(Alert.AlertType alertType, Stage owner, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.initOwner(owner);
+        alert.show();
+    }
+
+
+    
+    
+ // Placeholder method to go to the doctor page
+    private void goToDoctorPage(Stage primaryStage) {
+        // TODO: Implement transition to the doctor's page
+    }
+  
+    
+   
 
     public static void main(String[] args) {
         launch();
