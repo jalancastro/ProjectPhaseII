@@ -16,7 +16,7 @@ public class Receptionist {
 		this.infoForm = infoForm;
 		this.currPatientID = createPatientID();
 	}
-    //needs implementation
+	
     private String createPatientID() {
     	Random randID = new Random();
 		int min = 10000000;
@@ -30,10 +30,9 @@ public class Receptionist {
     	return String.valueOf(newID);
     }
 
-    //needs changes to implemtation
     protected  void createPatientFile() {
     	try {
-    		// Create new patient file
+    		// Create new patient file name
     		String infoFileName = currPatientID + ".txt";
     		// Store new patient file in data folder
     		File storeFile = new File(dao.getDataFolderPath() + "/", infoFileName);
@@ -46,18 +45,17 @@ public class Receptionist {
     		FileWriter writeInfo = new FileWriter(storeFile);
     		writeInfo.write(infoForm.toString());
     		writeInfo.close();
-    		
-    		
+	
     	}catch(IOException e) {
     		e.printStackTrace();
     	}
     	
     }
     
-    
     protected String getCurrPatientID() {
 		return currPatientID;
 	}
+    
 	//needs implementation
     public static void createProviderID() {
 

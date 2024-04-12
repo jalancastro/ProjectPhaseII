@@ -226,9 +226,7 @@ public class Portal extends Application {
         Button goBackButton = new Button("Go Back");
         goBackButton.setStyle(buttonStyle);
         goBackButton.setFont(buttonFont);
-        //goBackButton.setLayoutX(300);
-       // goBackButton.setLayoutY(700);
-        
+
         // Handle Go Back Button
         goBackButton.setOnAction(event -> {
             try {
