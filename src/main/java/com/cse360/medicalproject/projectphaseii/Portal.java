@@ -619,7 +619,7 @@ public class Portal extends Application {
         goBackButton.setPrefWidth(300);
         goBackButton.setOnAction(event -> {
             try {
-                start(primaryStage); 
+            	healthcarePage(primaryStage); 
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -679,7 +679,7 @@ public class Portal extends Application {
         goBackButton.setPrefWidth(300);
         goBackButton.setOnAction(event -> {
             try {
-                start(primaryStage); 
+            	healthcarePage(primaryStage); 
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -705,28 +705,23 @@ public class Portal extends Application {
     
     // Method to handle doctor login
     private void handleDoctorLogin(String id, Stage primaryStage) {
-        // Check if the ID is 6 digits
-        if (!id.matches("\\d{6}")) {
-            showAlert(Alert.AlertType.ERROR, primaryStage, "Login Error", "Invalid ID: Please enter a 6-digit ID.");
+    	
+    	if (!id.matches("\\d{8}")) {
+            showAlert(Alert.AlertType.ERROR, primaryStage, "Login Error", "Invalid ID: Please enter a 8-digit ID.");
             return;
         }
         
         // Read the doctor IDs from a file and verify
-        try {
-            Path path = Paths.get("doctors.txt");
-            boolean isValid = Files.lines(path).anyMatch(line -> line.equals(id));
+        	boolean isValid = dao.isDoctorIdValid(id);
 
             if (isValid) {
-                // If the ID is valid, proceed to the doctor page (to be implemented)
-                goToDoctorPage(primaryStage);
+            	Doctor doctor = new Doctor(id, dao.getDoctorNameById(id));
+            	doctor.start(primaryStage);
             } else {
                 // Show error if the ID is not found
                 showAlert(Alert.AlertType.ERROR, primaryStage, "Login Error", "Invalid ID: ID not found.");
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, primaryStage, "Login Error", "An error occurred while verifying ID.");
-        }
+     
     }
 
     // Method to show alerts
@@ -742,12 +737,7 @@ public class Portal extends Application {
 
     
     
- // Placeholder method to go to the doctor page
-    private void goToDoctorPage(Stage primaryStage) {
-        // TODO: Implement transition to the doctor's page
-    }
-  
-    
+
    
 
     public static void main(String[] args) {

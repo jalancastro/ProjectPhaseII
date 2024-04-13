@@ -106,7 +106,7 @@ public class Doctor extends Application {
     private void displayMessagesForSelectedPatient() {
         String selectedPatientId = patientIdComboBox.getValue();
         if (selectedPatientId != null && !selectedPatientId.trim().isEmpty()) {
-            List<String> messages = dao.getMessagesForPatientAndDoctor(doctorId, selectedPatientId);
+            List<String> messages = dao.getMessagesForDoctor(doctorId, selectedPatientId);
             messageHistoryArea.clear();
             for (String message : messages) {
                 messageHistoryArea.appendText(message + "\n");
