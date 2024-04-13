@@ -11,32 +11,23 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
-import javafx.scene.control.Separator;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class Portal extends Application {
@@ -111,7 +102,7 @@ public class Portal extends Application {
 
         // Action when buttons are clicked
         newPatientButton.setOnAction(event -> newPatientPage(primaryStage));
-        existingPatientButton.setOnAction(event -> patientPage(primaryStage));
+        existingPatientButton.setOnAction(event -> existingPatientLogin(primaryStage));
         healthcareProviderButton.setOnAction(event -> healthcarePage(primaryStage));
     }
     
@@ -377,7 +368,7 @@ public class Portal extends Application {
     }
 
  // Existing patient page
-    private void patientPage(Stage primaryStage) {
+    private void existingPatientLogin(Stage primaryStage) {
         Stage patientStage = new Stage();
         patientStage.setTitle("Patient");
 
@@ -459,18 +450,88 @@ public class Portal extends Application {
             Path path = Paths.get("data/" + patientId + ".txt");
             File patientFile = path.toFile();
 
-            System.out.println("Absolute Path: " + path.toAbsolutePath());
-
             if (patientFile.exists()) {
-                System.out.println("Exists");
+                existingPatientProfile(patientFile,primaryStage);
             } else {
                 // Show error if the ID is not found
                 showAlert(Alert.AlertType.ERROR, primaryStage, "Login Error", "Invalid Patient ID: Please try again.");
-                System.out.println("Does not exist");
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    // Patient Profile
+    private void existingPatientProfile(File patientFile, Stage primaryStage) {
+        Stage patientStage = new Stage();
+        patientStage.setTitle("Patient");
+        String patientName = null;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(patientFile))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                // Splitting the file line using commas
+                String[] parts = line.split(",");
+
+                // Assuming the first item is firstName, second item is lastName, etc.
+                if (parts.length >= 4) { // Make sure there are enough items
+                    String firstName = parts[0];
+                    String lastName = parts[1];
+                    patientName = firstName + " " + lastName;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        // Same button style and font
+        String buttonStyle = "-fx-background-color: #4473c5; -fx-text-fill: white;";
+        Font buttonFont = Font.font("Verdana", FontWeight.NORMAL, 25);
+
+        // Text
+        Text patientWelcomeText = new Text("Welcome, " + patientName);
+        Text instructions = new Text("Please enter your Patient ID");
+
+        // Text formatting and placement
+        patientWelcomeText.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+        patientWelcomeText.setX(100);
+        patientWelcomeText.setY(100);
+
+        // Go back button
+        Button goBackButton = new Button("Go Back");
+        goBackButton.setStyle(buttonStyle);
+        goBackButton.setFont(buttonFont);
+
+        VBox existingPatientBox = new VBox(50, patientWelcomeText, goBackButton);
+        existingPatientBox.setAlignment(Pos.CENTER);
+        existingPatientBox.setPrefWidth(600);
+        existingPatientBox.setPrefHeight(300);
+        existingPatientBox.setLayoutX(200);
+        existingPatientBox.setLayoutY(100);
+        existingPatientBox.setPadding(new Insets(25));
+        existingPatientBox.setStyle("-fx-border-color: black; -fx-border-width: 5px;"
+                + " -fx-border-radius: 5px;");
+
+
+        // Handle Sign In Button
+        //signIn.setOnAction(event -> {
+         //   handlePatientLogin(patientIdField.getText(), primaryStage);
+        //});
+
+
+        // Handle Go Back Button
+        goBackButton.setOnAction(event -> {
+            try {
+                existingPatientLogin(primaryStage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        Group patientGroup = new Group(existingPatientBox);
+        Scene patientScene = new Scene(patientGroup, 1000, 700);
+        primaryStage.setScene(patientScene);
     }
     
     private void healthcarePage(Stage primaryStage) {
