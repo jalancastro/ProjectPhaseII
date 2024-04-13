@@ -119,7 +119,6 @@ public class DataAccessObject {
                 String[] idName = parts[0].split(",", 2);
 
                 if (idName[0].trim().equals(doctorId) && parts.length > 1) {
-                    // Append each date/time entry separated by a semicolon to the historyBuilder
                     historyBuilder.append(parts[1].replace(";", "\n"));
                     break;
                 }
@@ -171,13 +170,8 @@ public class DataAccessObject {
 	            Files.write(Paths.get(messageFile.getPath()), (message + "\n").getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 	        } catch (IOException e) {
 	            e.printStackTrace();
-	            // Handle error: show an alert or log the error
 	        }
 	    }
-
-	protected String getDataFolderPath() {
-		return dataFolderPath;
-	}
 	 
 	 
 

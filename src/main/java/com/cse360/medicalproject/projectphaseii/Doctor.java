@@ -19,7 +19,6 @@ public class Doctor extends Application {
     private TextArea messageHistoryArea;
 
     public Doctor() {
-        // This empty constructor is necessary for JavaFX
     }
 
     public Doctor(String doctorId, String doctorName) {
@@ -119,5 +118,5 @@ public class Doctor extends Application {
         // Implementation for starting a new intake
     }
 
-    // Add any other necessary methods or event h
+    
 }
