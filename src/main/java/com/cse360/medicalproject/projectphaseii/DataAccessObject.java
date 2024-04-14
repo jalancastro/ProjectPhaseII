@@ -168,9 +168,17 @@ public class DataAccessObject {
 		 
 	        String filename = doctorId + "_" + patientId + "_messageDoctor.txt";
 	        File messageFile = getFile(filename);
+	        
+	        // Format the current date and time
+	        LocalDateTime now = LocalDateTime.now();
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	        String formattedDate = now.format(formatter);
+	        
+	        String messageWithDate = formattedDate + ": " + message + "\n";
+
 
 	        try {
-	            Files.write(Paths.get(messageFile.getPath()), (message + "\n").getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+	            Files.write(Paths.get(messageFile.getPath()), messageWithDate.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 	        } catch (IOException e) {
 	            e.printStackTrace();
 	        }
