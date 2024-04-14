@@ -1,12 +1,12 @@
 package com.cse360.medicalproject.projectphaseii;
 public class Visit {
     private String visitDate;
-    private HealthcareProvider visitProvider;
+    private Doctor visitingDoctor;
     private String visitSummary;
 
-    public Visit(String date, HealthcareProvider visitProv, String summary) {
+    public Visit(String date, Doctor visitProv, String summary) {
         visitDate = date;
-        visitProvider = visitProv;
+        visitingDoctor = visitProv;
         visitSummary = summary;
     }
 
@@ -26,11 +26,11 @@ public class Visit {
         return visitSummary;
     }
 
-    public void setHealthcareProvider(HealthcareProvider hp) {
-        visitProvider = hp;
+    public void setHealthcareProvider(Doctor d) {
+        visitingDoctor = d;
     }
 
-    public HealthcareProvider getHealthcareProvider() {
-        return visitProvider;
+    public Doctor getHealthcareProvider() {
+        return visitingDoctor;
     }
 }

@@ -1,6 +1,7 @@
 package com.cse360.medicalproject.projectphaseii;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
@@ -194,7 +195,6 @@ public class DataAccessObject {
         return doctorIds;
     }
 
-
         // Method to get messages for a specific doctor-patient pair
         public List<String> getMessagesForDoctor(String doctorId, String patientId) {
             List<String> messages = new ArrayList<>();
@@ -243,7 +243,6 @@ public class DataAccessObject {
             String formattedDate = now.format(formatter);
 
             String messageWithDate = formattedDate + ": " + message + "\n";
-
 
             try {
                 Files.write(Paths.get(messageFile.getPath()), messageWithDate.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);

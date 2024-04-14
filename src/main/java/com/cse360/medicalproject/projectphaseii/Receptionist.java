@@ -17,6 +17,12 @@ public class Receptionist {
 		this.currPatientID = createPatientID();
 	}
 	
+	public Receptionist(DataAccessObject dao, PatientInfoForm infoForm, String currPatientID){
+		this.dao = dao;
+		this.infoForm = infoForm;
+		this.currPatientID = currPatientID;
+	}
+	
     private String createPatientID() {
     	Random randID = new Random();
 		int min = 10000000;
@@ -35,21 +41,28 @@ public class Receptionist {
     		// Create new patient file name
     		String infoFileName = currPatientID + ".txt";
     		// Store new patient file in data folder
-    		File storeFile = new File(dao.getDataFolderPath() + "/", infoFileName);
+    		File storeFile = new File(dao.getDataFolderPath() + "/" + infoFileName);
     		
     		if(!storeFile.exists()) {
     			storeFile.createNewFile();
+           		// Write patient info form data into the file
+        		FileWriter writeInfo = new FileWriter(storeFile);
+        		writeInfo.write(infoForm.toString());
+        		writeInfo.close();
     		}
-    		
-       		// Write patient info form data into the file
-    		FileWriter writeInfo = new FileWriter(storeFile);
-    		writeInfo.write(infoForm.toString());
-    		writeInfo.close();
-	
-    	}catch(IOException e) {
+    		else {
+    			// Delete old file
+    			storeFile.delete();
+    			// Update file
+    			File fileNew = new File(dao.getDataFolderPath() + "/" + infoFileName);
+        		FileWriter writeInfo = new FileWriter(storeFile);
+        		writeInfo.write(infoForm.toString());
+        		writeInfo.close();
+    		}
+    	}
+    	catch(IOException e) {
     		e.printStackTrace();
     	}
-    	
     }
     
     protected String getCurrPatientID() {
