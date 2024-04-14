@@ -8,7 +8,6 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-
 import java.util.List;
 
 public class Doctor extends Application {
@@ -120,7 +119,7 @@ public class Doctor extends Application {
     private void sendMessageToPatient() {
         String selectedPatientId = patientIdComboBox.getValue();
         if (selectedPatientId != null && !selectedPatientId.trim().isEmpty()) {
-            dao.sendMessage(this.doctorId, selectedPatientId, messageSendArea.getText());
+            dao.sendMessageDoctor(this.doctorId, selectedPatientId, messageSendArea.getText());
             messageSendArea.clear();
         }
 	}
