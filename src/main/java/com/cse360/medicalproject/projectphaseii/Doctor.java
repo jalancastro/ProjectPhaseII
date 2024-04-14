@@ -17,6 +17,7 @@ public class Doctor extends Application {
     private DataAccessObject dao;
     private ComboBox<String> patientIdComboBox;
     private TextArea messageHistoryArea;
+    private TextArea messageSendArea;
 
     public Doctor() {
     }
@@ -85,7 +86,13 @@ public class Doctor extends Application {
         messagesTab.setClosable(false);
         VBox messagesVBox = new VBox(10);
         messagesVBox.setPadding(new Insets(10));
+        
+        
+        Label Send = new Label("Send Message");
+        Button intakeButton = new Button("Send");
+        intakeButton.setOnAction(event -> sendMessageToPatient());
 
+    
         // ComboBox for selecting a patient
         patientIdComboBox = new ComboBox<>();
         patientIdComboBox.setPromptText("Select a Patient");
@@ -95,23 +102,38 @@ public class Doctor extends Application {
         // TextArea for displaying messages
         messageHistoryArea = new TextArea();
         messageHistoryArea.setEditable(false);
+        
+        //Text area for sending messages
+        messageSendArea = new TextArea();
+        messageSendArea.setEditable(true);
 
         // Add components to the layout
-        messagesVBox.getChildren().addAll(new Label("Patient Messages:"), patientIdComboBox, messageHistoryArea);
+        messagesVBox.getChildren().addAll(new Label("Patient Messages:"), patientIdComboBox, messageHistoryArea, new Label("Doctor Messages:"), messageSendArea, Send, intakeButton);
         messagesTab.setContent(new ScrollPane(messagesVBox));
+        
+        
+
 
         return messagesTab;
     }
 
-    private void displayMessagesForSelectedPatient() {
+    private void sendMessageToPatient() {
         String selectedPatientId = patientIdComboBox.getValue();
         if (selectedPatientId != null && !selectedPatientId.trim().isEmpty()) {
-            List<String> messages = dao.getMessagesForDoctor(doctorId, selectedPatientId);
-            messageHistoryArea.clear();
-            for (String message : messages) {
-                messageHistoryArea.appendText(message + "\n");
-            }
+            dao.sendMessage(this.doctorId, selectedPatientId, messageSendArea.getText());
+            messageSendArea.clear();
         }
+	}
+
+	private void displayMessagesForSelectedPatient() {
+		  String selectedPatientId = patientIdComboBox.getValue();
+	        if (selectedPatientId != null && !selectedPatientId.trim().isEmpty()) {
+	            List<String> messages = dao.getMessagesForDoctor(doctorId, selectedPatientId);
+	            messageHistoryArea.clear();
+	            for (String message : messages) {
+	                messageHistoryArea.appendText(message + "\n");
+	            }
+	        }
     }
 
     private void startNewIntake() {
