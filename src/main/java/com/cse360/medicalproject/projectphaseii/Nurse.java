@@ -193,9 +193,7 @@ public class Nurse extends Application{
         	PatientInfoForm infoToUpdate = new PatientInfoForm(currPatient);
         	Receptionist frontDesk = new Receptionist(dao, infoToUpdate, currPatientID);
         	frontDesk.createPatientFile();
-        	providingDoctor.startDoctorForm(primaryStage, currPatient, currPatientID);
-        	
-           	 
+        	providingDoctor.startDoctorForm(primaryStage, currPatient, currPatientID);	 
         });
         
         Label [] formLbls = {hhLbl, medLbl, immuneLbl, allergiesLbl, hcLbl};
