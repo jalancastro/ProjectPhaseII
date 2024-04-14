@@ -18,12 +18,12 @@ public class HealthcareSystem {
         receptionistList.add(receptionist);
     }
 
-    public Patient getPatientByID(String patientID) {
-        for (Integer i = 0; i < patientList.size(); i++) {
-            if (patientID == patientList.get(i).getPaitentID()) {
-                return patientList.get(i);
-            }
-        }
+    public Patient getPatientById(String patientID) {
+        //for (Integer i = 0; i < patientList.size(); i++) {
+            //if (patientID == patientList.get(i).getPatientId()) {
+              //  return patientList.get(i);
+            //}
+        //}
         return null;
     }
 

@@ -38,6 +38,7 @@ public class Portal extends Application {
         dao = new DataAccessObject("data");
     }
 
+    @Override
     public void start(Stage primaryStage) throws Exception {
 
         // Title for the main scene
@@ -443,197 +444,19 @@ public class Portal extends Application {
             return;
         }
 
+        boolean valid = dao.isPatientIdValid(patientId);
         // Read the Patient's ID from a file title and verify
-        try {
-            Path path = Paths.get("data/" + patientId + ".txt");
-            File patientFile = path.toFile();
+        if (valid) {
+            File patientFile = dao.getFile(patientId + ".txt");
+            Patient patient = new Patient(patientId, patientFile);
+            patient.start(primaryStage);
 
-            if (patientFile.exists()) {
-                existingPatientProfile(patientFile,primaryStage,patientId);
-            } else {
-                // Show error if the ID is not found
-                showAlert(Alert.AlertType.ERROR, primaryStage, "Login Error", "Invalid Patient ID: Please try again.");
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } else {
+            // Show error if the ID is not found
+            showAlert(Alert.AlertType.ERROR, primaryStage, "Login Error", "Invalid Patient ID: Please try again.");
         }
     }
 
-    // Patient Profile
-    private void existingPatientProfile(File patientFile, Stage primaryStage, String patientId) throws IOException {
-        Stage patientStage = new Stage();
-        patientStage.setTitle("Patient");
-        String patientName = null;
-        String firstName = null;
-        String lastName = null;
-        String dob = null;
-        String add = null;
-        String city = null;
-        String state = null;
-        String zip = null;
-        String email = null;
-        String phone = null;
-        String allergies = "";
-        String hc = "";
-        TabPane tabPane = new TabPane();
-        tabPane.setMinHeight(300);
-
-        try (BufferedReader br = new BufferedReader(new FileReader(patientFile))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                // Splitting the file line using commas
-                String[] parts = line.split(",");
-
-                // Assuming the first item is firstName, second item is lastName, etc.
-                if (parts.length >= 4) { // Make sure there are enough items
-                    firstName = parts[0];
-                    lastName = parts[1];
-                    dob = parts[2];
-                    add = parts[3];
-                    city = parts[4];
-                    state = parts[5];
-                    zip = parts[6];
-                    email = parts[7];
-                    phone = parts[8];
-                    if (parts.length > 9){
-                        allergies = parts[9];
-                    }
-                    if (parts.length > 10){
-                        hc = parts[10];
-                    }
-                    patientName = firstName + " " + lastName;
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Setting up Patient information
-        PatientRecord patient = new PatientRecord(firstName, lastName, dob, add, city, state, zip, email, phone, allergies, hc);
-
-
-        // Same button style and font
-        String buttonStyle = "-fx-background-color: #4473c5; -fx-text-fill: white;";
-        Font buttonFont = Font.font("Verdana", FontWeight.NORMAL, 25);
-
-        // Text
-        Text patientWelcomeText = new Text("Welcome, " + patientName);
-        Text patientInfo = new Text("First Name: " + patient.getFirstName() +
-                "\nLast Name: " + patient.getLastName() +
-                "\nDate of Birth: " + patient.getDob() +
-                "\nAddress: " + patient.getAddress() +
-                "\nCity: " + patient.getCity() +
-                "\nState: " + patient.getState() +
-                "\nZip Code: " + patient.getZipcode() +
-                "\nEmail Address: " + patient.getEmail() +
-                "\nPhone Number: " + patient.getPhoneNumber() +
-                "\nAllergies: " + patient.getAllergies() +
-                "\nHealth Concerns: " + patient.getHealthConcerns()
-        );
-
-
-
-        // Text formatting and placement
-        patientWelcomeText.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
-        patientWelcomeText.setX(100);
-        patientWelcomeText.setY(100);
-
-
-        // Creating tab windows
-        Tab messages = new Tab("Messages");
-        messages.setClosable(false);
-        Tab visit = new Tab("Visit");
-        visit.setClosable(false);
-        Tab patientRecord = new Tab("Patient Record");
-        patientRecord.setClosable(false);
-
-        // TODO
-        // Message Tab
-        List<Path> messagePaths = handleMessageRetrieval(patientId, primaryStage);
-        List<String> messageFileNames = new ArrayList<>();
-        for (Path path : messagePaths) {
-            messageFileNames.add(path.getFileName().toString());
-        }
-
-        ListView<String> messageListView = new ListView<>();
-        messageListView.setItems(FXCollections.observableArrayList(messageFileNames));
-
-        StackPane messagesContent = new StackPane();
-        messagesContent.getChildren().add(messageListView);
-        messages.setContent(messagesContent);
-
-
-        // Visit Tab
-        StackPane visitContent = new StackPane();
-        visitContent.getChildren().add(new Button("Schedule Visit"));
-        visit.setContent(visitContent);
-
-        // Patient Record tab
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(patientInfo);
-        scrollPane.setFitToHeight(true);
-        StackPane patientRecordContent = new StackPane(scrollPane);
-        patientRecord.setContent(patientRecordContent);
-
-        tabPane.getTabs().addAll(messages,visit,patientRecord);
-
-        // Go back button
-        Button goBackButton = new Button("Go Back");
-        goBackButton.setStyle(buttonStyle);
-        goBackButton.setFont(buttonFont);
-
-        VBox existingPatientBox = new VBox(50, patientWelcomeText, tabPane, goBackButton);
-        existingPatientBox.setAlignment(Pos.CENTER);
-        existingPatientBox.setPrefWidth(600);
-        existingPatientBox.setPrefHeight(300);
-        existingPatientBox.setLayoutX(200);
-        existingPatientBox.setLayoutY(100);
-        existingPatientBox.setPadding(new Insets(25));
-        existingPatientBox.setStyle("-fx-border-color: black; -fx-border-width: 5px;"
-                + " -fx-border-radius: 5px;");
-
-
-        // Handle Sign In Button
-        //signIn.setOnAction(event -> {
-        //   handlePatientLogin(patientIdField.getText(), primaryStage);
-        //});
-
-
-        // Handle Go Back Button
-        goBackButton.setOnAction(event -> {
-            try {
-                existingPatientLogin(primaryStage);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-
-        Group patientGroup = new Group(existingPatientBox);
-        Scene patientScene = new Scene(patientGroup, 1000, 700);
-        primaryStage.setScene(patientScene);
-    }
-
-    public List<Path> handleMessageRetrieval(String patientId, Stage primaryStage) throws IOException {
-
-        List<Path> matchingMessages = new ArrayList<>();
-        Path start = Paths.get("data/" + patientId + "_");
-
-        try {
-            Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    if (Files.isRegularFile(file) && file.getFileName().toString().matches(patientId + "_.*")) {
-                        matchingMessages.add(file);
-                    }
-                    return FileVisitResult.CONTINUE;
-                }
-            });
-        } catch (IOException e) {
-        }
-        return matchingMessages;
-
-    }
-    
     private void healthcarePage(Stage primaryStage) {
         // Title for the Healthcare Provider login scene
         Text healthcareSceneTitle = new Text("Healthcare Provider Login");
@@ -719,7 +542,7 @@ public class Portal extends Application {
         goBackButton.setPrefWidth(300);
         goBackButton.setOnAction(event -> {
             try {
-            	healthcarePage(primaryStage); 
+                healthcarePage(primaryStage);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -779,7 +602,7 @@ public class Portal extends Application {
         goBackButton.setPrefWidth(300);
         goBackButton.setOnAction(event -> {
             try {
-            	healthcarePage(primaryStage); 
+                healthcarePage(primaryStage);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -805,18 +628,18 @@ public class Portal extends Application {
     
     // Method to handle doctor login
     private void handleDoctorLogin(String id, Stage primaryStage) {
-    	
-    	if (!id.matches("\\d{8}")) {
+
+        if (!id.matches("\\d{8}")) {
             showAlert(Alert.AlertType.ERROR, primaryStage, "Login Error", "Invalid ID: Please enter a 8-digit ID.");
             return;
         }
         
         // Read the doctor IDs from a file and verify
-        	boolean isValid = dao.isDoctorIdValid(id);
+        boolean isValid = dao.isDoctorIdValid(id);
 
             if (isValid) {
-            	Doctor doctor = new Doctor(id, dao.getDoctorNameById(id));
-            	doctor.start(primaryStage);
+                Doctor doctor = new Doctor(id, dao.getDoctorNameById(id));
+                doctor.start(primaryStage);
             } else {
                 // Show error if the ID is not found
                 showAlert(Alert.AlertType.ERROR, primaryStage, "Login Error", "Invalid ID: ID not found.");
@@ -833,12 +656,6 @@ public class Portal extends Application {
         alert.initOwner(owner);
         alert.show();
     }
-
-
-    
-    
-
-   
 
     public static void main(String[] args) {
         launch();

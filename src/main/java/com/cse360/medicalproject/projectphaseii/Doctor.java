@@ -1,17 +1,13 @@
 package com.cse360.medicalproject.projectphaseii;
 
 import javafx.application.Application;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
+import javafx.geometry.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -126,7 +122,7 @@ public class Doctor extends Application {
     private void sendMessageToPatient() {
         String selectedPatientId = patientIdComboBox.getValue();
         if (selectedPatientId != null && !selectedPatientId.trim().isEmpty()) {
-            dao.sendMessage(this.doctorId, selectedPatientId, messageSendArea.getText());
+            dao.sendMessageDoctor(this.doctorId, selectedPatientId, messageSendArea.getText());
             messageSendArea.clear();
         }
 	}

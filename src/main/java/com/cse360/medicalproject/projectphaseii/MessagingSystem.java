@@ -1,7 +1,7 @@
 package com.cse360.medicalproject.projectphaseii;
 public class MessagingSystem {
 
-    public static void sendMessage(String senderID, String recipientID, String subject, String content, HealthcareSystem hSystem) {
+    /*public static void sendMessage(String senderID, String recipientID, String subject, String content, HealthcareSystem hSystem) {
         Message newMessage = new Message(subject, recipientID, senderID, content);
         Patient patient = hSystem.getPatientByID(recipientID);
         if (patient == null) {
@@ -24,5 +24,5 @@ public class MessagingSystem {
         else {
             patient.getMessages().addMessage(newReply);
         }
-    }
+    }*/
 }
