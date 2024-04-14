@@ -1,11 +1,11 @@
 package com.cse360.medicalproject.projectphaseii;
 public class IntakeForm {
-    private int weight;
+    private String weight;
     private String height;
     private String bodyTemp;
     private String bloodPressure;
 
-    public IntakeForm(int weight, String height, String bodyTemp, String bloodPressure) {
+    public IntakeForm(String weight, String height, String bodyTemp, String bloodPressure) {
         this.weight = weight;
         this.height = height;
         this.bodyTemp = bodyTemp;
@@ -24,7 +24,7 @@ public class IntakeForm {
         this.height = height;
     }
 
-    public void setWeight(int weight) {
+    public void setWeight(String weight) {
         this.weight = weight;
     }
 
@@ -40,7 +40,7 @@ public class IntakeForm {
         return height;
     }
 
-    public int getWeight() {
+    public String getWeight() {
         return weight;
     }
 }

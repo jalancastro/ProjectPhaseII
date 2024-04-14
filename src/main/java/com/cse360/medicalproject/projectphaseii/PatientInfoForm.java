@@ -28,6 +28,20 @@ public class PatientInfoForm {
 		this.allergies = "";
 		this.healthConcerns = "";
 	}
+    
+    public PatientInfoForm(PatientRecord patientRecord) {
+		this.firstName = patientRecord.getFirstName();
+		this.lastName = patientRecord.getLastName();
+		this.dob = patientRecord.getDob();
+		this.address = patientRecord.getAddress();
+		this.city = patientRecord.getCity();
+		this.state = patientRecord.getState();
+		this.zipcode = patientRecord.getZipcode();
+		this.email = patientRecord.getEmail();
+		this.phoneNumber = patientRecord.getPhoneNumber();
+		this.allergies = patientRecord.getAllergies();
+		this.healthConcerns = patientRecord.getHealthConcerns();
+    }
 
 	public String getAddress() {
         return address;
@@ -121,7 +135,7 @@ public class PatientInfoForm {
 	public String toString() {
 		return firstName + "," + lastName + ","  + dob + ","
 				+ address + "," + city + "," + state + ","
-				+ zipcode + "," + email + "," + phoneNumber;
+				+ zipcode + "," + email + "," + phoneNumber + "," + allergies + "," + healthConcerns;
     }
     
 }
