@@ -9,6 +9,8 @@ public class PatientInfoForm {
     private String zipcode;
     private String email;
     private String phoneNumber;
+    private String allergies;
+    private String healthConcerns;
 
 
     public PatientInfoForm(String firstName, String lastName, String month, String day, String year, String address,
@@ -23,6 +25,8 @@ public class PatientInfoForm {
 		this.zipcode = zipcode;
 		this.email = email;
 		this.phoneNumber = phoneNumber;
+		this.allergies = "";
+		this.healthConcerns = "";
 	}
 
 	public String getAddress() {
@@ -97,7 +101,24 @@ public class PatientInfoForm {
         this.zipcode = zipcode;
     }
     
-    public String toString() {
+    
+    protected String getAllergies() {
+		return allergies;
+	}
+
+	protected void setAllergies(String allergies) {
+		this.allergies = allergies;
+	}
+
+	protected String getHealthConcerns() {
+		return healthConcerns;
+	}
+
+	protected void setHealthConcerns(String healthConcerns) {
+		this.healthConcerns = healthConcerns;
+	}
+
+	public String toString() {
 		return firstName + "," + lastName + ","  + dob + ","
 				+ address + "," + city + "," + state + ","
 				+ zipcode + "," + email + "," + phoneNumber;

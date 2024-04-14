@@ -2,6 +2,7 @@ package com.cse360.medicalproject.projectphaseii;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -38,7 +39,7 @@ public class Doctor extends Application {
         TabPane tabPane = new TabPane();
 
         // Create and add the Home and Messages tabs
-        Tab homeTab = createHomeTab();
+        Tab homeTab = createHomeTab(primaryStage);
         tabPane.getTabs().add(homeTab);
         
         Tab messagesTab = createMessagesTab();
@@ -53,7 +54,7 @@ public class Doctor extends Application {
         primaryStage.show();
     }
 
-    private Tab createHomeTab() {
+    private Tab createHomeTab(Stage primaryStage) {
         Tab homeTab = new Tab("Home");
         homeTab.setClosable(false);
         VBox homeVBox = new VBox(10);
@@ -72,7 +73,7 @@ public class Doctor extends Application {
         // In-takes section
         Label intakeLabel = new Label("In-takes:");
         Button intakeButton = new Button("Start New Intake");
-        intakeButton.setOnAction(event -> startNewIntake());
+        intakeButton.setOnAction(event -> startNewIntake(primaryStage));
 
         // Add components to the layout
         homeVBox.getChildren().addAll(greetingLabel, intakeLabel, intakeButton, historyLabel, historyArea);
@@ -136,9 +137,70 @@ public class Doctor extends Application {
 	        }
     }
 
-    private void startNewIntake() {
-        // Implementation for starting a new intake
+    private void startNewIntake(Stage primaryStage) {
+    	VBox initIntakeLayout = new VBox(15);
+    	initIntakeLayout.setAlignment(Pos.CENTER);
+    	Scene initIntakeScene = new Scene(initIntakeLayout, 800, 600);
+    	initIntakeScene.getStylesheets().add(getClass().getResource("app.css").toExternalForm());
+    	
+    	Label initIntakeLbl = new Label("Enter the visiting patient's ID");
+    	initIntakeLbl.getStyleClass().add("patient-form-text");
+    	
+    	TextField patientIdField = new TextField();
+    	patientIdField.setPromptText("Enter the visiting patient ID");
+    	patientIdField.getStyleClass().add("new-patient-fields");
+    	patientIdField.setStyle("-fx-pref-width: 300px;");
+
+      // Same button style and font
+         String buttonStyle = "-fx-background-color: #4473c5; -fx-text-fill: white;";
+         Font buttonFont = Font.font("Verdana", FontWeight.NORMAL, 25);
+       
+         // Go back button
+         Button goBackButton = new Button("Go Back");
+         goBackButton.setStyle(buttonStyle);
+         goBackButton.setFont(buttonFont);
+
+         // Handle Go Back Button
+         goBackButton.setOnAction(event -> {
+             try {
+                 start(primaryStage);
+             } catch (Exception e) {
+                 e.printStackTrace();
+             }
+         });
+         
+         Button confirmBtn = new Button("Confirm");
+         confirmBtn.setStyle(buttonStyle);
+         confirmBtn.setFont(buttonFont);
+
+         // Handle confirm button
+         confirmBtn.setOnAction(event -> {
+             if(dao.isPatientIdValid(patientIdField.getText())) {
+            	 // Initialize Nurse instance & display forms
+            	 Nurse intakeNurse = new Nurse(dao, patientIdField.getText());
+            	 intakeNurse.start(primaryStage);
+             }
+             else {
+            	 showAlert(Alert.AlertType.ERROR, primaryStage, "Confirmation Error", "Patient with ID " + 
+            			 						patientIdField.getText() + " does not exist.");
+             }
+         });
+         
+         initIntakeLayout.getChildren().addAll(initIntakeLbl, patientIdField, confirmBtn, goBackButton);
+    	
+    	primaryStage.setScene(initIntakeScene);
+    	primaryStage.show();
+        
     }
 
+    // Method to show alerts -- taken from Portal
+    private void showAlert(Alert.AlertType alertType, Stage owner, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.initOwner(owner);
+        alert.show();
+    }
     
 }
