@@ -1,16 +1,13 @@
 package com.cse360.medicalproject.projectphaseii;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.*;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
@@ -25,9 +22,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class Portal extends Application {
@@ -451,7 +449,7 @@ public class Portal extends Application {
             File patientFile = path.toFile();
 
             if (patientFile.exists()) {
-                existingPatientProfile(patientFile,primaryStage);
+                existingPatientProfile(patientFile,primaryStage,patientId);
             } else {
                 // Show error if the ID is not found
                 showAlert(Alert.AlertType.ERROR, primaryStage, "Login Error", "Invalid Patient ID: Please try again.");
@@ -462,10 +460,23 @@ public class Portal extends Application {
     }
 
     // Patient Profile
-    private void existingPatientProfile(File patientFile, Stage primaryStage) {
+    private void existingPatientProfile(File patientFile, Stage primaryStage, String patientId) throws IOException {
         Stage patientStage = new Stage();
         patientStage.setTitle("Patient");
         String patientName = null;
+        String firstName = null;
+        String lastName = null;
+        String dob = null;
+        String add = null;
+        String city = null;
+        String state = null;
+        String zip = null;
+        String email = null;
+        String phone = null;
+        String allergies = "";
+        String hc = "";
+        TabPane tabPane = new TabPane();
+        tabPane.setMinHeight(300);
 
         try (BufferedReader br = new BufferedReader(new FileReader(patientFile))) {
             String line;
@@ -475,14 +486,30 @@ public class Portal extends Application {
 
                 // Assuming the first item is firstName, second item is lastName, etc.
                 if (parts.length >= 4) { // Make sure there are enough items
-                    String firstName = parts[0];
-                    String lastName = parts[1];
+                    firstName = parts[0];
+                    lastName = parts[1];
+                    dob = parts[2];
+                    add = parts[3];
+                    city = parts[4];
+                    state = parts[5];
+                    zip = parts[6];
+                    email = parts[7];
+                    phone = parts[8];
+                    if (parts.length > 9){
+                        allergies = parts[9];
+                    }
+                    if (parts.length > 10){
+                        hc = parts[10];
+                    }
                     patientName = firstName + " " + lastName;
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        // Setting up Patient information
+        PatientRecord patient = new PatientRecord(firstName, lastName, dob, add, city, state, zip, email, phone, allergies, hc);
 
 
         // Same button style and font
@@ -491,19 +518,71 @@ public class Portal extends Application {
 
         // Text
         Text patientWelcomeText = new Text("Welcome, " + patientName);
-        Text instructions = new Text("Please enter your Patient ID");
+        Text patientInfo = new Text("First Name: " + patient.getFirstName() +
+                "\nLast Name: " + patient.getLastName() +
+                "\nDate of Birth: " + patient.getDob() +
+                "\nAddress: " + patient.getAddress() +
+                "\nCity: " + patient.getCity() +
+                "\nState: " + patient.getState() +
+                "\nZip Code: " + patient.getZipcode() +
+                "\nEmail Address: " + patient.getEmail() +
+                "\nPhone Number: " + patient.getPhoneNumber() +
+                "\nAllergies: " + patient.getAllergies() +
+                "\nHealth Concerns: " + patient.getHealthConcerns()
+        );
+
+
 
         // Text formatting and placement
         patientWelcomeText.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
         patientWelcomeText.setX(100);
         patientWelcomeText.setY(100);
 
+
+        // Creating tab windows
+        Tab messages = new Tab("Messages");
+        messages.setClosable(false);
+        Tab visit = new Tab("Visit");
+        visit.setClosable(false);
+        Tab patientRecord = new Tab("Patient Record");
+        patientRecord.setClosable(false);
+
+        // TODO
+        // Message Tab
+        List<Path> messagePaths = handleMessageRetrieval(patientId, primaryStage);
+        List<String> messageFileNames = new ArrayList<>();
+        for (Path path : messagePaths) {
+            messageFileNames.add(path.getFileName().toString());
+        }
+
+        ListView<String> messageListView = new ListView<>();
+        messageListView.setItems(FXCollections.observableArrayList(messageFileNames));
+
+        StackPane messagesContent = new StackPane();
+        messagesContent.getChildren().add(messageListView);
+        messages.setContent(messagesContent);
+
+
+        // Visit Tab
+        StackPane visitContent = new StackPane();
+        visitContent.getChildren().add(new Button("Schedule Visit"));
+        visit.setContent(visitContent);
+
+        // Patient Record tab
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(patientInfo);
+        scrollPane.setFitToHeight(true);
+        StackPane patientRecordContent = new StackPane(scrollPane);
+        patientRecord.setContent(patientRecordContent);
+
+        tabPane.getTabs().addAll(messages,visit,patientRecord);
+
         // Go back button
         Button goBackButton = new Button("Go Back");
         goBackButton.setStyle(buttonStyle);
         goBackButton.setFont(buttonFont);
 
-        VBox existingPatientBox = new VBox(50, patientWelcomeText, goBackButton);
+        VBox existingPatientBox = new VBox(50, patientWelcomeText, tabPane, goBackButton);
         existingPatientBox.setAlignment(Pos.CENTER);
         existingPatientBox.setPrefWidth(600);
         existingPatientBox.setPrefHeight(300);
@@ -516,7 +595,7 @@ public class Portal extends Application {
 
         // Handle Sign In Button
         //signIn.setOnAction(event -> {
-         //   handlePatientLogin(patientIdField.getText(), primaryStage);
+        //   handlePatientLogin(patientIdField.getText(), primaryStage);
         //});
 
 
@@ -532,6 +611,27 @@ public class Portal extends Application {
         Group patientGroup = new Group(existingPatientBox);
         Scene patientScene = new Scene(patientGroup, 1000, 700);
         primaryStage.setScene(patientScene);
+    }
+
+    public List<Path> handleMessageRetrieval(String patientId, Stage primaryStage) throws IOException {
+
+        List<Path> matchingMessages = new ArrayList<>();
+        Path start = Paths.get("data/" + patientId + "_");
+
+        try {
+            Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    if (Files.isRegularFile(file) && file.getFileName().toString().matches(patientId + "_.*")) {
+                        matchingMessages.add(file);
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+        }
+        return matchingMessages;
+
     }
     
     private void healthcarePage(Stage primaryStage) {
