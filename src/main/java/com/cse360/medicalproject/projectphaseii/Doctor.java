@@ -19,7 +19,6 @@ public class Doctor extends Application {
     private TextArea messageHistoryArea;
 
     public Doctor() {
-        // This empty constructor is necessary for JavaFX
     }
 
     public Doctor(String doctorId, String doctorName) {
@@ -107,7 +106,7 @@ public class Doctor extends Application {
     private void displayMessagesForSelectedPatient() {
         String selectedPatientId = patientIdComboBox.getValue();
         if (selectedPatientId != null && !selectedPatientId.trim().isEmpty()) {
-            List<String> messages = dao.getMessagesForPatientAndDoctor(doctorId, selectedPatientId);
+            List<String> messages = dao.getMessagesForDoctor(doctorId, selectedPatientId);
             messageHistoryArea.clear();
             for (String message : messages) {
                 messageHistoryArea.appendText(message + "\n");
@@ -119,5 +118,5 @@ public class Doctor extends Application {
         // Implementation for starting a new intake
     }
 
-    // Add any other necessary methods or event h
+    
 }

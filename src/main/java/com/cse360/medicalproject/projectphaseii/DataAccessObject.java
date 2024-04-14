@@ -58,6 +58,10 @@ public class DataAccessObject {
               
     }
     
+    protected String getDataFolderPath() {
+		return dataFolderPath;
+	}
+    
     public String getDoctorNameById(String id) {
         DataAccessObject dao = new DataAccessObject("data");
         File doctorFile = dao.getFile("doctors.txt");
@@ -119,7 +123,6 @@ public class DataAccessObject {
                 String[] idName = parts[0].split(",", 2);
 
                 if (idName[0].trim().equals(doctorId) && parts.length > 1) {
-                    // Append each date/time entry separated by a semicolon to the historyBuilder
                     historyBuilder.append(parts[1].replace(";", "\n"));
                     break;
                 }
@@ -143,17 +146,16 @@ public class DataAccessObject {
 	  
 	  
 	    // Method to get messages for a specific doctor-patient pair
-	    public List<String> getMessagesForPatientAndDoctor(String doctorId, String patientId) {
+	    public List<String> getMessagesForDoctor(String doctorId, String patientId) {
 	        List<String> messages = new ArrayList<>();
-	        File messageFile = new File(dataFolderPath, doctorId + "_" + patientId + "_messages.txt");
+	        File messageFile = new File(dataFolderPath, doctorId + "_" + patientId + "_messagePatient.txt");
 
 	        if (messageFile.exists()) {
 	            try {
 	                List<String> allMessages = Files.readAllLines(messageFile.toPath());
 	                for (String message : allMessages) {
-	                    if (message.startsWith(patientId + "_" + doctorId) || message.startsWith(doctorId + "_" + patientId)) {
 	                        messages.add(message);
-	                    }
+	                    
 	                }
 	            } catch (IOException e) {
 	                e.printStackTrace();
@@ -171,13 +173,8 @@ public class DataAccessObject {
 	            Files.write(Paths.get(messageFile.getPath()), (message + "\n").getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 	        } catch (IOException e) {
 	            e.printStackTrace();
-	            // Handle error: show an alert or log the error
 	        }
 	    }
-
-	protected String getDataFolderPath() {
-		return dataFolderPath;
-	}
 	 
 	 
 
