@@ -269,5 +269,62 @@ public class DataAccessObject {
             e.printStackTrace();
         }
     }
+    
+    public PatientRecord dataFileToRecord(String patientId) {
+		 PatientRecord patient;
+		 
+		 Path path = Paths.get("data/" + patientId + ".txt");
+	     File patientFile = path.toFile();
+		// alan's code from main
+	     String patientName = null;
+		 String firstName = null;
+		 String lastName = null;
+		 String dob = null;
+		 String add = null;
+		 String city = null;
+		 String state = null;
+		 String zip = null;
+		 String email = null;
+		 String phone = null;
+		 String allergies = "";
+		 String hc = "";
+	
+	     try (BufferedReader br = new BufferedReader(new FileReader(patientFile))) {
+	         String line;
+	         while ((line = br.readLine()) != null) {
+	             // Splitting the file line using commas
+	             String[] parts = line.split(",");
+
+	             // Assuming the first item is firstName, second item is lastName, etc.
+	             if (parts.length >= 4) { // Make sure there are enough items
+	                 firstName = parts[0];
+	                 lastName = parts[1];
+	                 dob = parts[2];
+	                 add = parts[3];
+	                 city = parts[4];
+	                 state = parts[5];
+	                 zip = parts[6];
+	                 email = parts[7];
+	                 phone = parts[8];
+	                 if (parts.length > 9){
+	                     allergies = parts[9];
+	                 }
+	                 if (parts.length > 10){
+	                     hc = parts[10];
+	                 }
+	                patientName = firstName + " " + lastName;
+	             }
+	        }
+	     } 
+	     catch (IOException e) {
+	         e.printStackTrace();
+	     }
+
+	        // Setting up Patient information
+	    patient = new PatientRecord(firstName, lastName, dob, add, city, state, zip, email, phone, allergies, hc);
+			 
+		return patient;
+		 
+	 }
 }
 
