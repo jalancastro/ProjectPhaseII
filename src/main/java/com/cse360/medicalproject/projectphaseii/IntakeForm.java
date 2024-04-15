@@ -4,43 +4,16 @@ public class IntakeForm {
     private String height;
     private String bodyTemp;
     private String bloodPressure;
+	private String age;
+    private DataAccessObject dao;
 
-    public IntakeForm(String weight, String height, String bodyTemp, String bloodPressure) {
+    public IntakeForm(String weight, String height, String bodyTemp, String bloodPressure, String age) {
         this.weight = weight;
         this.height = height;
         this.bodyTemp = bodyTemp;
         this.bloodPressure = bloodPressure;
+        this.age = age;
     }
 
-    public void setBloodPressure(String bloodPressure) {
-        this.bloodPressure = bloodPressure;
-    }
-
-    public void setBodyTemp(String bodyTemp) {
-        this.bodyTemp = bodyTemp;
-    }
-
-    public void setHeight(String height) {
-        this.height = height;
-    }
-
-    public void setWeight(String weight) {
-        this.weight = weight;
-    }
-
-    public String getBloodPressure() {
-        return bloodPressure;
-    }
-
-    public String getBodyTemp() {
-        return bodyTemp;
-    }
-
-    public String getHeight() {
-        return height;
-    }
-
-    public String getWeight() {
-        return weight;
-    }
+   
 }
