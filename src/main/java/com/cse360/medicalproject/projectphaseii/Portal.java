@@ -459,6 +459,8 @@ public class Portal extends Application {
 
     private void healthcarePage(Stage primaryStage) {
         // Title for the Healthcare Provider login scene
+        Doctor doctor = new Doctor();
+
         Text healthcareSceneTitle = new Text("Healthcare Provider Login");
         healthcareSceneTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
 
@@ -467,7 +469,7 @@ public class Portal extends Application {
         Font buttonFont = Font.font("Verdana", FontWeight.NORMAL, 25);
 
         // Creating login buttons for each healthcare provider role
-        Button nurseButton = new Button("Nurse");
+        Button nurseButton = new Button("Patient Intake");
         nurseButton.setStyle(buttonStyle);
         nurseButton.setFont(buttonFont);
         nurseButton.setPrefSize(325, 75);
@@ -514,26 +516,31 @@ public class Portal extends Application {
     
     private void nurseLoginPage(Stage primaryStage) {
         // Title text
-        Text nursePageText = new Text("Nurse Sign In");
+        Text nursePageText = new Text("Patient and Doctor Info");
         nursePageText.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
 
         // Instructions text
-        Text instructions = new Text("Please enter your Nurse ID");
+        Text instructions = new Text("Please enter your patient's ID and patient's Doctor ID");
         instructions.setFont(Font.font("Verdana", 20));
         instructions.setFill(Color.GRAY);
 
-        // Doctor ID Text Field
-        TextField nurseIDField = new TextField();
-        nurseIDField.setPromptText("Nurse ID");
-        nurseIDField.setStyle("-fx-text-fill: black; -fx-pref-width: 300; -fx-pref-height: 50; -fx-font-size: 20;");
+        // patient ID Text Field
+        TextField patientIDField = new TextField();
+        patientIDField.setPromptText("Patient ID");
+        patientIDField.setStyle("-fx-text-fill: black; -fx-pref-width: 100; -fx-pref-height: 50; -fx-font-size: 20;");
+        
+        //doctor ID Text Field
+        TextField doctorIDField = new TextField();
+        doctorIDField.setPromptText("Doctor ID");
+        doctorIDField.setStyle("-fx-text-fill: black; -fx-pref-width: 100; -fx-pref-height: 50; -fx-font-size: 20;");
 
         // Sign In button
-        Button signInButton = new Button("Sign In");
+        Button signInButton = new Button("Start Form");
         String buttonStyle = "-fx-background-color: #4473c5; -fx-text-fill: white; -fx-font-size: 20;";
         signInButton.setStyle(buttonStyle);
         signInButton.setPrefWidth(300);
         signInButton.setFont(Font.font("Verdana", FontWeight.NORMAL, 20));
-        signInButton.setOnAction(event -> handleNurseLogin(nurseIDField.getText(), primaryStage));
+        signInButton.setOnAction(event -> handleNurseLogin(patientIDField.getText(), doctorIDField.getText(), primaryStage));
 
         // Go back button
         Button goBackButton = new Button("Go Back");
@@ -549,7 +556,7 @@ public class Portal extends Application {
         });
 
         // VBox layout for the sign-in components
-        VBox signInBox = new VBox(20, nursePageText, instructions, nurseIDField, signInButton, goBackButton);
+        VBox signInBox = new VBox(20, nursePageText, instructions, doctorIDField, patientIDField, signInButton, goBackButton);
         signInBox.setAlignment(Pos.CENTER);
         signInBox.setPadding(new Insets(40));
         signInBox.setStyle("-fx-background-color: white; -fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5;");
@@ -564,15 +571,34 @@ public class Portal extends Application {
         primaryStage.setTitle("Doctor Sign In");
         primaryStage.show();
     }    
-    
-    
-    
-    private Object handleNurseLogin(String text, Stage primaryStage) {
-        // TODO Auto-generated method stub
-        return null;
+      
+
+    private void handleNurseLogin(String patientID, String doctorID, Stage primaryStage) {
+    	
+    	 if (!patientID.matches("\\d{8}") || !doctorID.matches("\\d{8}")) {
+             showAlert(Alert.AlertType.ERROR, primaryStage, "Login Error", "Invalid ID: Please enter a 8-digit ID.");
+             return;
+         }
+    	 
+    	  // Read the doctor IDs from a file and verify
+         boolean isValid = dao.isDoctorIdValid(doctorID) && dao.isPatientIdValid(patientID);
+
+             if (isValid) {
+            	Doctor doctor = new Doctor(doctorID, dao.getDoctorNameById(doctorID));
+             	Nurse nurse = new Nurse(dao, patientID, doctor);
+             	nurse.start(primaryStage);
+             } else {
+                 // Show error if the ID is not found
+                 showAlert(Alert.AlertType.ERROR, primaryStage, "Login Error", "Invalid ID: ID not found.");
+             }
+      
+    	
+    	
+    	
+    	
     }
 
-    private void doctorLoginPage(Stage primaryStage) {
+	private void doctorLoginPage(Stage primaryStage) {
         // Title text
         Text doctorPageText = new Text("Doctor Sign In");
         doctorPageText.setFont(Font.font("Verdana", FontWeight.BOLD, 25));

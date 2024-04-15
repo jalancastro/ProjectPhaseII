@@ -73,11 +73,15 @@ public class Nurse extends Application{
         TextField bp = new TextField();
         bp.setPromptText("Blood Pressure");
         
-        Stream.of(weight, height, bodyTemp, bp).forEach(TextField ->
+        
+        TextField age = new TextField();
+        age.setPromptText("Over 12 Y/N");
+        
+        Stream.of(weight, height, bodyTemp, bp, age).forEach(TextField ->
         		TextField.getStyleClass().add("patient-intake-fields")
         );
         
-        TextField [] vitalFields = {weight, height, bodyTemp, bp};
+        TextField [] vitalFields = {weight, height, bodyTemp, bp, age};
         
         String buttonStyle = "-fx-background-color: #4473c5; -fx-text-fill: white;";
         Font buttonFont = Font.font("Verdana", FontWeight.NORMAL, 25);
@@ -89,7 +93,7 @@ public class Nurse extends Application{
 
         // Handle confirm button
         submitBtn.setOnAction(event -> {
-           	 this.intake = new IntakeForm(weight.getText(), height.getText(), bodyTemp.getText(), bp.getText());
+           	 this.intake = new IntakeForm(weight.getText(), height.getText(), bodyTemp.getText(), bp.getText(), age.getText());
            	 startNurseForm(primaryStage, currPatient);
            	 
         });
@@ -116,7 +120,7 @@ public class Nurse extends Application{
         	intakeGrid.getChildren().add(vitalFields[i]);
         }
         // Column 9
-        GridPane.setConstraints(submitBtn, 0, 9, 3, 1, HPos.RIGHT, VPos.BOTTOM, null, null, null);
+        GridPane.setConstraints(submitBtn, 0, 10, 3, 1, HPos.RIGHT, VPos.BOTTOM, null, null, null);
         intakeGrid.getChildren().add(submitBtn);
     	
     	primaryStage.setScene(intakeRoot);

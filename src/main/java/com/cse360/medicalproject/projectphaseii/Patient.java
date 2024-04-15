@@ -88,7 +88,7 @@ public class Patient extends Application {
         tabPane.getTabs().addAll(messages, visit, patientRecord);
 
         // Welcome text
-        Text patientWelcomeText = new Text("Welcome, " + firstName + lastName);
+        Text patientWelcomeText = new Text("Welcome, " + firstName + " " + lastName);
 
         // Text formatting and placement
         patientWelcomeText.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
@@ -99,11 +99,6 @@ public class Patient extends Application {
         borderPane.setTop(patientWelcomeText);
         borderPane.setCenter(tabPane);
         borderPane.setMaxSize(600, 400);
-
-        // Go back button
-        Button goBackButton = new Button("Home");
-        goBackButton.setStyle(buttonStyle);
-        goBackButton.setFont(buttonFont);
 
         Scene scene = new Scene(borderPane, 800, 600);
         primaryStage.setScene(scene);
@@ -187,6 +182,9 @@ public class Patient extends Application {
         Tab patientRecordTab = new Tab("Profile");
         patientRecordTab.setClosable(false);
 
+        VBox patientInfoBox = new VBox(10);
+        patientInfoBox.setPadding(new Insets(10));
+
         Text patientInfo = new Text("First Name: " + firstName +
                 "\nLast Name: " + lastName +
                 "\nDate of Birth: " + dob +
@@ -200,14 +198,18 @@ public class Patient extends Application {
                 "\nHealth Concerns: " + hc
         );
 
+        Button changeContactInfo = new Button("Change Contact Info");
+
+        patientInfoBox.getChildren().addAll(patientInfo, changeContactInfo);
         // Set text wrapping
         patientInfo.wrappingWidthProperty().set(400);
 
         ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(patientInfo);
+        scrollPane.setContent(patientInfoBox);
         scrollPane.setFitToHeight(true);
 
         patientRecordTab.setContent(scrollPane);
+        changeContactInfo.setOnAction(event -> makeChanges());
 
         return patientRecordTab;
     }
@@ -217,7 +219,6 @@ public class Patient extends Application {
         if (selectedDoctorId != null && !selectedDoctorId.trim().isEmpty()) {
             dao.sendMessagePatient(this.patientId, selectedDoctorId, messageSendArea.getText());
             messageSendArea.clear();
-            System.out.println("sent");
         }
     }
 
@@ -231,6 +232,7 @@ public class Patient extends Application {
             }
         }
     }
+
     private List<String> readVisitDetailsFromFile(String fileName) {
         List<String> visitDetailsList = new ArrayList<>();
         File file = dao.getFile(fileName);
@@ -262,5 +264,92 @@ public class Patient extends Application {
         }
 
         return visitDetailsList;
+    }
+
+    public class EditPatientInfoWindow {
+        private TextField emailField;
+        private TextField phoneField;
+        private Stage window;
+
+        public EditPatientInfoWindow(){
+            window = new Stage();
+        }
+
+        public void display(String currentEmail, String currentPhone) {
+            window.setTitle("Change Contact Information");
+
+            Label emailLabel = new Label("Email:");
+            emailField = new TextField(currentEmail);
+
+            Label phoneLabel = new Label("Phone:");
+            phoneField = new TextField(currentPhone);
+
+            Text refresh = new Text("Your information will be updated the next time you login!");
+
+            Button saveButton = new Button("Save Changes");
+            saveButton.setOnAction(e -> {
+                saveChanges();
+            });
+
+            VBox layout = new VBox(10);
+            layout.getChildren().addAll(emailLabel, emailField, phoneLabel, phoneField, refresh, saveButton);
+
+            Scene scene = new Scene(layout, 400, 200);
+            window.setResizable(false);
+            window.setScene(scene);
+            window.show();
+        }
+
+        private void saveChanges() {
+            // Save changes to patient object
+            String newEmail = emailField.getText();
+            String newPhone = phoneField.getText();
+
+            File patientFile = dao.getFile(patientId + ".txt");
+
+            List<String> lines = new ArrayList<>();
+            try (BufferedReader reader = new BufferedReader(new FileReader(patientFile))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    lines.add(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            // Find information to be replaced
+            for (int i = 0; i < lines.size(); i++) {
+                String[] parts = lines.get(i).split(",");
+                if (parts.length >= 9) { // Assuming patient ID is the first field
+                    parts[7] = newEmail;
+                    parts[8] = newPhone;
+                    lines.set(i, String.join(",", parts)); // Update the line
+                    break;
+                }
+            }
+
+            // Write the modified contents back to the file
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(patientFile))) {
+                for (String line : lines) {
+                    writer.write(line);
+                    writer.newLine();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            email = newEmail;
+            phone = newPhone;
+
+            // Closing window
+            window.close();
+        }
+    }
+
+    private void makeChanges() {
+        EditPatientInfoWindow editWindow = new EditPatientInfoWindow();
+        editWindow.display(email, phone);
+
     }
 }
