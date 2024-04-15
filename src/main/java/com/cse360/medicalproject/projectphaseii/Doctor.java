@@ -138,7 +138,7 @@ public class Doctor extends Application {
 	        }
     }
 
-    private void startNewIntake(Stage primaryStage) {
+    public void startNewIntake(Stage primaryStage) {
     	VBox initIntakeLayout = new VBox(20);
     	initIntakeLayout.setAlignment(Pos.CENTER);
     	Scene initIntakeScene = new Scene(initIntakeLayout, 800, 600);
