@@ -267,7 +267,7 @@ public class Doctor extends Application {
         
         // Handle order meds button
         orderMedBtn.setOnAction(event -> {
-        	// NEEDS UI & IMPLEMENTATION
+        	startPharmacyOrder(primaryStage, doctorFormRoot);
            	 
         });
         
@@ -322,4 +322,119 @@ public class Doctor extends Application {
     	primaryStage.show();
     }
     
+    private void startPharmacyOrder(Stage primaryStage, Scene doctorFormScene) {
+    	
+    	GridPane pharmacyGrid = new GridPane();
+    	pharmacyGrid.setPadding(new Insets (10));
+    	// Horizontal gap between fields
+    	pharmacyGrid.setHgap(5);
+    	// Vertical gap between fields
+    	pharmacyGrid.setVgap(10);
+    	
+    	Scene pharmacyRoot = new Scene(pharmacyGrid, 800, 600);
+    	pharmacyRoot.getStylesheets().add(getClass().getResource("app.css").toExternalForm());
+    	
+    	Label pharmacyLbl = new Label("Pharmacy Order");
+    	
+    	Label medLbl = new Label("New Medication");
+    	TextArea medArea = new TextArea();
+    	medArea.setPrefWidth(300);
+    	
+    	Label infoLbl = new Label("Pharmacy Information");
+    	TextField address = new TextField();
+    	address.setPromptText("Address");
+    	
+    	TextField city = new TextField();
+    	city.setPromptText("City");
+    	
+    	TextField zip = new TextField();
+    	zip.setPromptText("Zip Code");
+    	
+    	TextField state = new TextField();
+    	state.setPromptText("State");
+    	
+    	Label summary = new Label("Order Summary");
+    	TextArea summaryArea = new TextArea();
+    	summaryArea.setEditable(false);
+    	
+        String buttonStyle = "-fx-background-color: #4473c5; -fx-text-fill: white;";
+        Font buttonFont = Font.font("Verdana", FontWeight.NORMAL, 25);
+        Font addFont = Font.font("Verdana", FontWeight.NORMAL, 14);
+        
+        Button addBtn = new Button("Add");
+        addBtn.setStyle(buttonStyle);
+        addBtn.setFont(buttonFont);
+        addBtn.setPrefSize(150, 70);
+        addBtn.setOnAction(event->{
+        	if(!medArea.getText().equals("")) {
+        		summaryArea.setText(medArea.getText());
+        	}
+        	else {
+        		showAlert(Alert.AlertType.ERROR, primaryStage, "Input Error", "No medication to add");
+        	}
+        });
+        
+    	Button reorderBtn = new Button("Reorder");
+        reorderBtn.setStyle(buttonStyle);
+        reorderBtn.setFont(buttonFont);
+        reorderBtn.setPrefSize(150, 50);
+        reorderBtn.setOnAction(event->{
+        	medArea.setText("");
+        	Stream.of(address, city, zip, state).forEach(TextField->
+        				TextField.setText("")
+        			);
+        });
+        
+    	
+    	Button orderBtn = new Button("Order");
+        orderBtn.setStyle(buttonStyle);
+        orderBtn.setFont(buttonFont);
+        orderBtn.setPrefSize(150, 50);
+        orderBtn.setOnAction(event->{
+        	if(medArea.getText().equals("") || address.getText().equals("") || city.getText().equals("")
+        			|| zip.getText().equals("") || state.getText().equals("") || summaryArea.getText().equals("")) {
+        		showAlert(Alert.AlertType.ERROR, primaryStage, "Input Error", "All fields must be filled out before ordering");
+        	}
+        	else {
+        		PharmacyOrder order = new PharmacyOrder(medArea.getText(), address.getText(), zip.getText(), city.getText(), state.getText());
+        		primaryStage.setScene(doctorFormScene);
+        		primaryStage.show();
+        	}
+        	
+        });
+        
+        // Column 0
+        GridPane.setConstraints(pharmacyLbl, 0, 0, 3, 1, null, null, null, null, null);
+        pharmacyGrid.getChildren().add(pharmacyLbl);
+        
+        // Column 1
+        pharmacyGrid.add(medLbl, 0, 1);
+        GridPane.setConstraints(summary, 1, 1, 2, 1, HPos.CENTER, null, null, null, null);
+        pharmacyGrid.getChildren().add(summary);
+        
+        // Column 2
+        pharmacyGrid.add(medArea, 0, 2);
+        GridPane.setConstraints(addBtn, 1, 2, 1, 1, null, VPos.TOP, null, null, null);
+        pharmacyGrid.getChildren().add(addBtn);
+        GridPane.setConstraints(summaryArea, 2, 2, 1, 3, HPos.RIGHT, null, null, null, null);
+        pharmacyGrid.getChildren().add(summaryArea);
+        
+        // Column 3
+        pharmacyGrid.add(infoLbl, 0, 3);
+        // Column 4
+        pharmacyGrid.add(address, 0, 4);
+        pharmacyGrid.add(city, 1, 4);
+        // Column 5
+        pharmacyGrid.add(zip, 0, 5);
+        pharmacyGrid.add(state, 1, 5);
+        // Column 6
+        GridPane.setConstraints(reorderBtn, 0, 6, 1, 1, HPos.LEFT, VPos.BOTTOM, null, null, null);
+        pharmacyGrid.getChildren().add(reorderBtn);
+        GridPane.setConstraints(orderBtn, 1, 6, 2, 1, HPos.RIGHT, VPos.BOTTOM, null, null, null);
+        pharmacyGrid.getChildren().add(orderBtn);
+        
+        primaryStage.setScene(pharmacyRoot);
+        primaryStage.show();
+    	
+    }
 }

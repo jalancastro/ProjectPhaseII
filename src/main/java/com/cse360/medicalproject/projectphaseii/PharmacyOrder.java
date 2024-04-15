@@ -6,7 +6,18 @@ public class PharmacyOrder {
     protected String pharmacyCity;
     protected String pharmacyState;
 
-    public void setMedication(String medication) {
+    
+    public PharmacyOrder(String medication, String pharmacyAddress, String pharmacyZip, String pharmacyCity,
+			String pharmacyState) {
+		super();
+		this.medication = medication;
+		this.pharmacyAddress = pharmacyAddress;
+		this.pharmacyZip = pharmacyZip;
+		this.pharmacyCity = pharmacyCity;
+		this.pharmacyState = pharmacyState;
+	}
+
+	public void setMedication(String medication) {
         this.medication = medication;
     }
 
